@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel de Ações</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background-color: white;
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .section-title {
+      margin-top: 30px;
+      margin-bottom: 10px;
+      font-size: 18px;
+      color: #555;
+    }
+
+    .btn {
+      padding: 12px 25px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .btn-inserir    { background-color: #4CAF50; color: white; }
+    .btn-atualizar  { background-color: #2196F3; color: white; }
+    .btn-procurar   { background-color: #FFC107; color: black; }
+    .btn-deletar    { background-color: #F44336; color: white; }
+
+    .btn-table {
+      background-color: #e0e0e0;
+      color: #333;
+    }
+
+    .btn-table:hover {
+      background-color: #d5d5d5;
+    }
+
+    .selected {
+      outline: 3px solid #555;
+      transform: scale(1.05);
+    }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .submit-btn {
+      margin-top: 25px;
+      background-color: #673ab7;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Painel de Ações</h1>
+    <form action="{% url 'iniciar' %}" method="POST"> {% csrf_token %}
+      <!-- Ações -->
+      <div class="section-title">Escolha uma Ação</div>
+      <div class="button-group">
+        <button type="button" class="btn btn-inserir" onclick="selecionarAcao('inserir', this)">Inserir</button>
+        <button type="button" class="btn btn-atualizar" onclick="selecionarAcao('atualizar', this)">Atualizar</button>
+        <button type="button" class="btn btn-procurar" onclick="selecionarAcao('procurar', this)">Procurar</button>
+        <button type="button" class="btn btn-deletar" onclick="selecionarAcao('deletar', this)">Deletar</button>
+      </div>
+
+      <!-- Tabelas -->
+      <div class="section-title">Escolha uma Tabela</div>
+      <div class="button-group">
+        <button type="button" class="btn btn-table" onclick="selecionarTabela('autor', this)">autor</button>
+        <button type="button" class="btn btn-table" onclick="selecionarTabela('avaliacao', this)">avaliacao</button>
+        <button type="button" class="btn btn-table" onclick="selecionarTabela('cidade', this)">cidade</button>
+        <button type="button" class="btn btn-table" onclick="selecionarTabela('edicao', this)">edicao</button>
+        <button type="button" class="btn btn-table" onclick="selecionarTabela('editora', this)">editora</button>
+        <button type="button" class="btn btn-table" onclick="selecionarTabela('livro', this)">livro</button>
+        <button type="button" class="btn btn-table" onclick="selecionarTabela('livroaut', this)">livroaut</button>
+        <button type="button" class="btn btn-table" onclick="selecionarTabela('usravaliaaut', this)">usravaliaaut</button>
+        <button type="button" class="btn btn-table" onclick="selecionarTabela('usrlelivro', this)">usrlelivro</button>
+        <button type="button" class="btn btn-table" onclick="selecionarTabela('usrsegueaut', this)">usrsegueaut</button>
+        <button type="button" class="btn btn-table" onclick="selecionarTabela('usrsegueusr', this)">usrsegueusr</button>
+        <button type="button" class="btn btn-table" onclick="selecionarTabela('usuario', this)">usuario</button>
+      </div>
+
+      <!-- Hidden inputs -->
+      <input type="hidden" name="acao" id="inputAcao">
+      <input type="hidden" name="tabela" id="inputTabela">
+
+      <!-- Enviar -->
+      <button type="submit" class="btn submit-btn">Enviar</button>
+    </form>
+  </div>
+
+  <script>
+    let botaoAcaoSelecionado = null;
+    let botaoTabelaSelecionado = null;
+
+    function selecionarAcao(valor, elemento) {
+      if (botaoAcaoSelecionado) {
+        botaoAcaoSelecionado.classList.remove("selected");
+      }
+      botaoAcaoSelecionado = elemento;
+      elemento.classList.add("selected");
+      document.getElementById("inputAcao").value = valor;
+    }
+
+    function selecionarTabela(valor, elemento) {
+      if (botaoTabelaSelecionado) {
+        botaoTabelaSelecionado.classList.remove("selected");
+      }
+      botaoTabelaSelecionado = elemento;
+      elemento.classList.add("selected");
+      document.getElementById("inputTabela").value = valor;
+    }
+  </script>
+</body>
+</html>
