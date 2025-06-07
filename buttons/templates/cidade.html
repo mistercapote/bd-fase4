@@ -95,8 +95,11 @@
 <body>
   <div class="form-container">
     <h1>Inserir Cidade</h1>
-    <form method="post" action="/inserir-cidade/">
-      {% csrf_token %}
+     <form action="{% if acao == 'inserir' %}
+                    {% url 'formulario' 'inserir' 'cidade' %}
+                  {% elif acao == 'atualizar' %}
+                    {% url 'formulario' 'atualizar' 'cidade' %}
+                  {% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
 
       <label for="cidadeid">ID da Cidade</label>
       <input type="number" id="cidadeid" name="cidadeid" required min="1">
