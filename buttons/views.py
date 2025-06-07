@@ -41,7 +41,7 @@ def formulario(request, acao, tabela):
             if acao == "inserir":
                 query = f"INSERT INTO usuario (usuarioid, nomeusuario, senha, emailusuario,datanascimento, genero, fotoperfil, biografia, apelido, cidadeid) VALUES ({usuarioid},'{nomeusuario}', '{senha}', '{emailusuario}', '{datanascimento}', {genero}, '{fotoperfil}', '{biografia}', '{apelido}', {cidadeid});"
             elif acao == "atualizar":
-                query = "UPDATE usuario SET nomeusuario = %s, senha = %s, emailusuario = %s, datanascimento = %s, genero = %s, fotoperfil = %s, biografia = %s, apelido = %s, cidadeid = %s WHERE usuarioid = %s"
+                query = "UPDATE usuario SET nomeusuario = %s, senha = %s, emailusuario = %s, datanascimento = %s, genero = %s, fotoperfil = %s, biografia = %s, apelido = %s, cidadeid = %s WHERE usuarioid = %s;"
     
             return HttpResponse(f"Usuário {nomeusuario} inserido com sucesso!")
 
@@ -53,10 +53,9 @@ def formulario(request, acao, tabela):
                 query = f"INSERT INTO autor (autorid, nomeautor, descricaoautor) VALUES ({autorid},'{nomeautor}', '{descricaoautor}');"
                 return HttpResponse(f"Autor {nomeautor} inserido com sucesso!")
             elif acao == "atualizar":
-                query = "UPDATE autor SET nomeautor = %s, descricaoautor = %s WHERE autorid = %s"
+                query = "UPDATE autor SET nomeautor = %s, descricaoautor = %s WHERE autorid = %s;"
                 return HttpResponse(f"Autor {nomeautor} atualizado com sucesso!")
             
-
         elif tabela == "avaliacao":
             avalid = request.POST.get('avalid')
             tituloaval = request.POST.get('tituloaval')
@@ -64,7 +63,7 @@ def formulario(request, acao, tabela):
             if acao == "inserir":
                 query = f"INSERT INTO avaliacao (avalid, tituloaval, corpoaval) VALUES ({avalid}, '{tituloaval}', '{corpoaval}');"
             elif acao == "atualizar":
-                query = "UPDATE avaliacao SET tituloaval = %s, corpoaval = %s WHERE avalid = %s"
+                query = "UPDATE avaliacao SET tituloaval = %s, corpoaval = %s WHERE avalid = %s;"
             return HttpResponse(f"Avaliação {tituloaval} inserida com sucesso!")
         
         elif tabela == "cidade":
@@ -87,9 +86,8 @@ def formulario(request, acao, tabela):
             return render(request, 'usrsegueusr.html')
     
         
+# def listar(request, tabela):
+#     query = f"SELECT * FROM {tabela};"
     
-# def listar(request):
-#     pass
-
-# def deletar(request):
-#     pass
+# def deletar(request, tabela):
+#     id = request.POST.get('id')
