@@ -1,3 +1,4 @@
+from django.db import connection
 from django.shortcuts import render, redirect
 from django.http import HttpResponseBadRequest, HttpResponse
 
@@ -220,10 +221,20 @@ def formulario(request, acao, tabela):
 
             return HttpResponse(f"Usuário {seguidorid} passou a seguir o usuário {seguidoid}.")
 
-            
-                
-# def listar(request, tabela):
-#     query = f"SELECT * FROM {tabela};"
+
+def listar(request, tabela):
+    if request.method == "GET":
+        with connection.cursor() as cursor:
+            cursor.execute(f"SELECT * FROM {tabela} LIMIT 50")
+            colunas = [col[0] for col in cursor.description]
+            resultados = cursor.fetchall()
+
+        return render(request, 'listar.html', {
+            'colunas': colunas,
+            'resultados': resultados,
+            'tabela': tabela
+        })
+
     
 # def deletar(request, tabela):
 #     id = request.POST.get('id')
