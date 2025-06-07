@@ -76,8 +76,15 @@ WSGI_APPLICATION = 'bdfase4.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'elisa',
+        'USER': 'cd_2024',
+        'PASSWORD': '2024',
+        'HOST': '10.61.49.132',
+        'PORT': '5432',
+        'OPTIONS': {
+            'options': '-c search_path=skoob,public'
+        }
     }
 }
 
