@@ -99,8 +99,7 @@
 <body>
   <div class="form-container">
     <h1>Inserir Avaliação</h1>
-    <form method="post" action="/inserir-avaliacao/">
-      {% csrf_token %}
+    <form action="{% url 'inserir' 'avaliacao' %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
 
       <label for="avalid">ID da Avaliação</label>
       <input type="number" id="avalid" name="avalid" required min="1">
