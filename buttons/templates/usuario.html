@@ -99,8 +99,11 @@
 <body>
   <div class="form-container">
     <h1>Inserir Usuário</h1>
-    <form method="post" action="/inserir-usuario/" enctype="multipart/form-data">
-      {% csrf_token %}
+    <form action="{% if acao == 'inserir' %}
+                    {% url 'formulario' 'inserir' 'usuario' %}
+                  {% elif acao == 'atualizar' %}
+                    {% url 'formulario' 'atualizar' 'usuario' %}
+                  {% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
       
       <label for="usuarioid">ID do Usuário</label>
       <input type="number" id="usuarioid" name="usuarioid" required min="1">

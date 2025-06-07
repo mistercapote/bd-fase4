@@ -12,9 +12,9 @@ def iniciar(request):
         if not acao or not tabela:
             return HttpResponseBadRequest("Ação e tabela são obrigatórias.")
         if acao == "inserir":
-            return redirect(f'/inserir/{tabela}')
+            return redirect(f'/formulario/inserir/{tabela}')
         elif acao == "atualizar":
-            return redirect(f'/atualizar/{tabela}')
+            return redirect(f'/formulario/atualizar/{tabela}')
         elif acao == "listar":
             return redirect(f'/listar/{tabela}')
         elif acao == "deletar":
@@ -22,9 +22,9 @@ def iniciar(request):
     return HttpResponseBadRequest("Método não suportado.")
 
 
-def inserir(request, tabela):
+def formulario(request, acao, tabela):
     if request.method == "GET":
-        return render(request, f'{tabela}.html')
+        return render(request, f'{tabela}.html', {'acao': acao})
     elif request.method == "POST":
         if tabela == "usuario":
             usuarioid = request.POST.get('usuarioid')
@@ -37,25 +37,36 @@ def inserir(request, tabela):
             biografia = request.POST.get('biografia')
             apelido = request.POST.get('apelido')
             cidadeid = request.POST.get('cidadeid')
+            
+            if acao == "inserir":
+                query = f"INSERT INTO usuario (usuarioid, nomeusuario, senha, emailusuario,datanascimento, genero, fotoperfil, biografia, apelido, cidadeid) VALUES ({usuarioid},'{nomeusuario}', '{senha}', '{emailusuario}', '{datanascimento}', {genero}, '{fotoperfil}', '{biografia}', '{apelido}', {cidadeid});"
+            elif acao == "atualizar":
+                query = "UPDATE usuario SET nomeusuario = %s, senha = %s, emailusuario = %s, datanascimento = %s, genero = %s, fotoperfil = %s, biografia = %s, apelido = %s, cidadeid = %s WHERE usuarioid = %s"
+    
             return HttpResponse(f"Usuário {nomeusuario} inserido com sucesso!")
 
         elif tabela == "autor":
             autorid = request.POST.get('autorid')
             nomeautor = request.POST.get('nomeautor')
             descricaoautor = request.POST.get('descricaoautor')
-            return HttpResponse("Autor inserido com sucesso!")
+            if acao == "inserir":
+                query = f"INSERT INTO autor (autorid, nomeautor, descricaoautor) VALUES ({autorid},'{nomeautor}', '{descricaoautor}');"
+                return HttpResponse(f"Autor {nomeautor} inserido com sucesso!")
+            elif acao == "atualizar":
+                query = "UPDATE autor SET nomeautor = %s, descricaoautor = %s WHERE autorid = %s"
+                return HttpResponse(f"Autor {nomeautor} atualizado com sucesso!")
+            
 
         elif tabela == "avaliacao":
             avalid = request.POST.get('avalid')
             tituloaval = request.POST.get('tituloaval')
             corpoaval = request.POST.get('corpoaval')
-            return HttpResponse("Avaliação inserida com sucesso!")
-        if tabela == "usuario":
-            return render(request, 'usuario.html')
-        elif tabela == "autor":
-            return render(request, 'autor.html')
-        elif tabela == "avaliacao":
-            return render(request, 'avaliacao.html')
+            if acao == "inserir":
+                query = f"INSERT INTO avaliacao (avalid, tituloaval, corpoaval) VALUES ({avalid}, '{tituloaval}', '{corpoaval}');"
+            elif acao == "atualizar":
+                query = "UPDATE avaliacao SET tituloaval = %s, corpoaval = %s WHERE avalid = %s"
+            return HttpResponse(f"Avaliação {tituloaval} inserida com sucesso!")
+        
         elif tabela == "cidade":
             return render(request, 'cidade.html')
         elif tabela == "edicao":
@@ -76,10 +87,7 @@ def inserir(request, tabela):
             return render(request, 'usrsegueusr.html')
     
         
-
-# def atualizar(request):
-#     pass
-
+    
 # def listar(request):
 #     pass
 
