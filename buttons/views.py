@@ -67,25 +67,161 @@ def formulario(request, acao, tabela):
             return HttpResponse(f"Avaliação {tituloaval} inserida com sucesso!")
         
         elif tabela == "cidade":
-            return render(request, 'cidade.html')
+            cidadeid = request.POST.get('cidadeid')
+            nomecidade = request.POST.get('nomecidade')
+            estadoid = request.POST.get('estadoid')
+
+            if acao == "inserir":
+                query = f"INSERT INTO cidade (cidadeid, nomecidade, estadoid) VALUES ({cidadeid}, '{nomecidade}', '{estadoid}');"
+                return HttpResponse(f"Cidade {nomecidade} inserida com sucesso!")
+            elif acao == "atualizar":
+                query = "UPDATE cidade SET nomecidade = %s, estadoid = %s WHERE cidadeid = %s;"
+                return HttpResponse(f"Cidade {nomecidade} atualizada com sucesso!")
+
         elif tabela == "edicao":
-            return render(request, 'edicao.html')
+            edicaoid = request.POST.get('edicaoid')
+            anopublicacao = request.POST.get('anopublicacao')
+            isbn13 = request.POST.get('isbn13')
+            isbn10 = request.POST.get('isbn10')
+            idioma = request.POST.get('idioma')
+            numpaginas = request.POST.get('numpaginas')
+            descricaoedicao = request.POST.get('descricaoedicao')
+            livroid = request.POST.get('livroid')
+            editoraid = request.POST.get('editoraid')
+
+            if acao == "inserir":
+                query = (f"INSERT INTO edicao (edicaoid, anopublicacao, isbn13, isbn10, idioma, numpaginas, descricaoedicao, livroid, editoraid) "
+                        f"VALUES ({edicaoid}, {anopublicacao}, "
+                        f"'{isbn13}', '{isbn10}', '{idioma}', {numpaginas}, "
+                        f"'{descricaoedicao}', {livroid}, {editoraid});")
+                return HttpResponse(f"Edição {edicaoid} inserida com sucesso!")
+            elif acao == "atualizar":
+                query = ("UPDATE edicao SET anopublicacao = %s, isbn13 = %s, isbn10 = %s, idioma = %s, numpaginas = %s, descricaoedicao = %s, livroid = %s, editoraid = %s "
+                        "WHERE edicaoid = %s;")
+                return HttpResponse(f"Edição {edicaoid} atualizada com sucesso!")
+
         elif tabela == "editora":
-            return render(request, 'editora.html')
+            editoraid = request.POST.get('editoraid')
+            nomeeditora = request.POST.get('nomeeditora')
+            siteoficial = request.POST.get('siteoficial')
+            descricaoeditora = request.POST.get('descricaoeditora')
+
+            if acao == "inserir":
+                query = (
+                    f"INSERT INTO editora (editoraid, nomeeditora, siteoficial, descricaoeditora) "
+                    f"VALUES ({editoraid}, '{nomeeditora}', '{siteoficial}', '{descricaoeditora}');"
+                )
+                return HttpResponse(f"Editora {nomeeditora} inserida com sucesso!")
+
+            elif acao == "atualizar":
+                query = (
+                    "UPDATE editora SET nomeeditora = %s, siteoficial = %s, descricaoeditora = %s "
+                    "WHERE editoraid = %s;"
+                )
+                return HttpResponse(f"Editora {nomeeditora} atualizada com sucesso!")
+
         elif tabela == "livro":
-            return render(request, 'livro.html')
-        elif tabela == "livroaut":
-            return render(request, 'livroaut.html')
-        elif tabela == "usravaliaaut":
-            return render(request, 'usravaliaaut.html')
-        elif tabela == "usrlelivro":
-            return render(request, 'usrlelivro.html')
-        elif tabela == "usrsegueaut":
-            return render(request, 'usrsegueaut.html')
-        elif tabela == "usrsegueusr":
-            return render(request, 'usrsegueusr.html')
-    
-        
+            livroid = request.POST.get('livroid')
+            nomelivro = request.POST.get('nomelivro')
+
+            if acao == "inserir":
+                query = (
+                    f"INSERT INTO livro (livroid, nomelivro) "
+                    f"VALUES ({livroid}, '{nomelivro}');"
+                )
+                return HttpResponse(f"Livro '{nomelivro}' inserido com sucesso!")
+
+            elif acao == "atualizar":
+                query = (
+                    "UPDATE livro SET nomelivro = %s "
+                    "WHERE livroid = %s;"
+                )
+                return HttpResponse(f"Livro '{nomelivro}' atualizado com sucesso!")
+
+        if tabela == "livroaut":
+            livroid = request.POST.get('livroid')
+            autorid = request.POST.get('autorid')
+
+            if acao == "inserir":
+                query = f"INSERT INTO livroaut (livroid, autorid) VALUES ({livroid}, {autorid});"
+            elif acao == "atualizar":
+                query = "UPDATE livroaut SET autorid = %s WHERE livroid = %s;"
+
+            return HttpResponse(f"Relacionamento Livro ({livroid}) ↔ Autor ({autorid}) processado com sucesso!")
+
+        if tabela == "usravaliaaut":
+            notaautor = request.POST.get('notaautor')
+            autorid = request.POST.get('autorid')
+            usuarioid = request.POST.get('usuarioid')
+
+            if acao == "inserir":
+                query = f"INSERT INTO usravaliaaut (notaautor, autorid, usuarioid) VALUES ({notaautor}, {autorid}, {usuarioid});"
+            elif acao == "atualizar":
+                query = "UPDATE usravaliaaut SET notaautor = %s WHERE autorid = %s AND usuarioid = %s;"
+
+            return HttpResponse(f"Avaliação do autor ({autorid}) pelo usuário ({usuarioid}) registrada com nota {notaautor}.")
+
+        if tabela == "usrlelivro":
+            statusleitura = request.POST.get('statusleitura')
+            notalivro = request.POST.get('notalivro') or 'NULL'
+            usuarioid = request.POST.get('usuarioid')
+            livroid = request.POST.get('livroid')
+            avalid = request.POST.get('avalid') or 'NULL'
+
+            if acao == "inserir":
+                query = f"""
+                    INSERT INTO usrlelivro (statusleitura, notalivro, usuarioid, livroid, avalid)
+                    VALUES ('{statusleitura}', {notalivro}, {usuarioid}, {livroid}, {avalid});
+                """
+            elif acao == "atualizar":
+                query = """
+                    UPDATE usrlelivro
+                    SET statusleitura = %s, notalivro = %s, avalid = %s
+                    WHERE usuarioid = %s AND livroid = %s;
+                """
+
+            return HttpResponse(f"Leitura do livro {livroid} registrada para o usuário {usuarioid}.")
+
+        if tabela == "usrsegueaut":
+            usuarioid = request.POST.get('usuarioid')
+            autorid = request.POST.get('autorid')
+            datasegaut = request.POST.get('datasegaut')
+
+            if acao == "inserir":
+                query = f"""
+                    INSERT INTO usrsegueaut (usuarioid, autorid, datasegaut)
+                    VALUES ({usuarioid}, {autorid}, '{datasegaut}');
+                """
+            elif acao == "atualizar":
+                query = """
+                    UPDATE usrsegueaut
+                    SET datasegaut = %s
+                    WHERE usuarioid = %s AND autorid = %s;
+                """
+
+            return HttpResponse(f"Usuário {usuarioid} seguiu o autor {autorid}.")
+
+        if tabela == "usrsegueusr":
+            datasegusr = request.POST.get('datasegusr')
+            seguidorid = request.POST.get('seguidorid')
+            seguidoid = request.POST.get('seguidoid')
+
+            if acao == "inserir":
+                query = f"""
+                    INSERT INTO usrsegueusr (datasegusr, seguidorid, seguidoid)
+                    VALUES ('{datasegusr}', {seguidorid}, {seguidoid});
+                """
+            elif acao == "atualizar":
+                query = """
+                    UPDATE usrsegueusr
+                    SET datasegusr = %s
+                    WHERE seguidorid = %s AND seguidoid = %s;
+                """
+
+            return HttpResponse(f"Usuário {seguidorid} passou a seguir o usuário {seguidoid}.")
+
+            
+                
 # def listar(request, tabela):
 #     query = f"SELECT * FROM {tabela};"
     
