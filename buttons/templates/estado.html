@@ -95,8 +95,11 @@
 <body>
   <div class="form-container">
     <h1>Inserir Estado</h1>
-    <form method="post" action="/inserir-estado/">
-      {% csrf_token %}
+     <form action="{% if acao == 'inserir' %}
+                    {% url 'formulario' 'inserir' 'estado' %}
+                  {% elif acao == 'atualizar' %}
+                    {% url 'formulario' 'atualizar' 'estado' %}
+                  {% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
 
       <label for="estadoid">Sigla do Estado (UF)</label>
       <input type="text" id="estadoid" name="estadoid" maxlength="2" pattern="[A-Z]{2}" title="Use apenas letras maiúsculas (ex: SP)" required>

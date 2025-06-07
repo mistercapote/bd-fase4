@@ -95,8 +95,11 @@
 <body>
   <div class="form-container">
     <h1>Registrar Seguimento</h1>
-    <form method="post" action="/registrar-seguimento/">
-      {% csrf_token %}
+     <form action="{% if acao == 'inserir' %}
+                    {% url 'formulario' 'inserir' 'usrsegueusr' %}
+                  {% elif acao == 'atualizar' %}
+                    {% url 'formulario' 'atualizar' 'usrsegueusr' %}
+                  {% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
 
       <label for="datasegusr">Data do Seguimento</label>
       <input type="date" id="datasegusr" name="datasegusr" required>

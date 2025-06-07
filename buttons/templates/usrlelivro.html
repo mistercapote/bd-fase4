@@ -95,8 +95,11 @@
 <body>
   <div class="form-container">
     <h1>Registrar Leitura de Livro</h1>
-    <form method="post" action="/registrar-leitura/">
-      {% csrf_token %}
+     <form action="{% if acao == 'inserir' %}
+                    {% url 'formulario' 'inserir' 'usrlelivro' %}
+                  {% elif acao == 'atualizar' %}
+                    {% url 'formulario' 'atualizar' 'usrlelivro' %}
+                  {% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
 
       <label for="statusleitura">Status da Leitura</label>
       <select id="statusleitura" name="statusleitura" required>

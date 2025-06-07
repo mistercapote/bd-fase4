@@ -95,8 +95,11 @@
 <body>
   <div class="form-container">
     <h1>Inserir Livro</h1>
-    <form method="post" action="/inserir-livro/">
-      {% csrf_token %}
+     <form action="{% if acao == 'inserir' %}
+                    {% url 'formulario' 'inserir' 'livro' %}
+                  {% elif acao == 'atualizar' %}
+                    {% url 'formulario' 'atualizar' 'livro' %}
+                  {% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
 
       <label for="livroid">ID do Livro</label>
       <input type="number" id="livroid" name="livroid" required min="1">

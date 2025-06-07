@@ -99,8 +99,11 @@
 <body>
   <div class="form-container">
     <h1>Inserir Edição</h1>
-    <form method="post" action="/inserir-edicao/">
-      {% csrf_token %}
+     <form action="{% if acao == 'inserir' %}
+                    {% url 'formulario' 'inserir' 'edicao' %}
+                  {% elif acao == 'atualizar' %}
+                    {% url 'formulario' 'atualizar' 'edicao' %}
+                  {% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
 
       <label for="edicaoid">ID da Edição</label>
       <input type="number" id="edicaoid" name="edicaoid" required min="1">
