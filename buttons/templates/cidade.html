@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Inserir Editora</title>
+  <title>Inserir Cidade</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     * {
@@ -44,17 +44,13 @@
       color: #555;
     }
 
-    input, textarea, select {
+    input {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
       border-radius: 8px;
       border: 1px solid #ccc;
       font-size: 14px;
-    }
-
-    textarea {
-      resize: vertical;
     }
 
     button {
@@ -84,7 +80,7 @@
         font-size: 20px;
       }
 
-      input, textarea, select {
+      input {
         font-size: 13px;
         padding: 8px;
       }
@@ -98,21 +94,18 @@
 </head>
 <body>
   <div class="form-container">
-    <h1>Inserir Usuário</h1>
-    <form method="post" action="/inserir-editora/" enctype="multipart/form-data">
+    <h1>Inserir Cidade</h1>
+    <form method="post" action="/inserir-cidade/">
       {% csrf_token %}
-      
-      <label for="editoraid">ID da Editora</label>
-      <input type="number" id="editoraid" name="editoraid" required min="1">
 
-      <label for="nomeeditora">Nome da Editora</label>
-      <input type="text" id="nomeeditora" name="nomeeditora" required>
+      <label for="cidadeid">ID da Cidade</label>
+      <input type="number" id="cidadeid" name="cidadeid" required min="1">
 
-      <label for="siteoficial">Site oficial da Editora</label>
-      <input type="text" id="siteoficial" name="siteoficial">
+      <label for="nomecidade">Nome da Cidade</label>
+      <input type="text" id="nomecidade" name="nomecidade" maxlength="128" required>
 
-      <label for="descricaoeditora">Descrição da Editora</label>
-      <input type="text" id="descricaoeditora" name="descricaoeditora">
+      <label for="estadoid">ID do Estado (UF)</label>
+      <input type="text" id="estadoid" name="estadoid" maxlength="2" pattern="[A-Z]{2}" title="Use apenas a sigla do estado em letras maiúsculas (ex: SP)" required>
 
       <button type="submit">Enviar</button>
     </form>
