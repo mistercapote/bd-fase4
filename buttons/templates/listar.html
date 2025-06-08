@@ -61,7 +61,13 @@
         {% for linha in resultados %}
           <tr>
             {% for valor in linha %}
-              <td>{{ valor }}</td>
+              <td>
+                {% if valor|stringformat:"s"|slice:":8" == "https://" or valor|stringformat:"s"|slice:":7" == "http://" %}
+                    <img src="{{ valor }}" alt="Foto de Perfil" width="60" height="60" style="border-radius: 50%;">
+                  {% else %}
+                    {{ valor }}
+                  {% endif %}
+              </td>
             {% endfor %}
           </tr>
         {% endfor %}
