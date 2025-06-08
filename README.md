@@ -5,14 +5,14 @@ Esse repositório contém o trabalho final da disciplina de Banco de Dados.
 
 Para instalar as bibliotecas necessárias, execute:
 ```bash
-  PYTHONPATH=pip install -r requirements.txt
+  pip install -r requirements.txt
 ```
 
 ## Rodar o servidos
 
 Para criar o html, execute:
 ```bash
-  PYTHONPATH=python3 manage.py runserver (seu id aqui):8000 
+  python3 manage.py runserver (seu id aqui):8000 
 ```
 
 
