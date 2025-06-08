@@ -41,9 +41,22 @@ def formulario(request, acao, tabela):
             
             if acao == "inserir":
                 query = f"INSERT INTO usuario (usuarioid, nomeusuario, senha, emailusuario,datanascimento, genero, fotoperfil, biografia, apelido, cidadeid) VALUES ({usuarioid},'{nomeusuario}', '{senha}', '{emailusuario}', '{datanascimento}', {genero}, '{fotoperfil}', '{biografia}', '{apelido}', {cidadeid});"
+                with connection.cursor() as cursor:
+                    cursor.execute(query, [
+                    usuarioid, nomeusuario, senha, emailusuario,
+                    datanascimento, genero,  biografia, apelido, cidadeid
+                ])
             elif acao == "atualizar":
                 query = "UPDATE usuario SET nomeusuario = %s, senha = %s, emailusuario = %s, datanascimento = %s, genero = %s, fotoperfil = %s, biografia = %s, apelido = %s, cidadeid = %s WHERE usuarioid = %s;"
-    
+
+                with connection.cursor() as cursor:
+                    cursor.execute(query, [
+    nomeusuario, senha, emailusuario, datanascimento,
+    genero, fotoperfil, biografia, apelido, cidadeid, usuarioid
+])
+
+
+                
             return HttpResponse(f"Usuário {nomeusuario} inserido com sucesso!")
 
         elif tabela == "autor":
