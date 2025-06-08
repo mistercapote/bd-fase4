@@ -176,7 +176,7 @@ def formulario(request, acao, tabela):
             emailusuario = request.POST.get('emailusuario')
             datanascimento = request.POST.get('datanascimento')
             genero = request.POST.get('genero')
-            fotoperfil = request.FILES.get('fotoperfil')  # cuidado aqui, depende do seu upload
+            fotoperfil = request.POST.get('fotoperfil') 
             biografia = request.POST.get('biografia')
             apelido = request.POST.get('apelido')
             cidadeid = request.POST.get('cidadeid')
@@ -264,7 +264,7 @@ def formulario(request, acao, tabela):
 def listar(request, tabela):
     if request.method == "GET":
         with connection.cursor() as cursor:
-            cursor.execute(f"SELECT * FROM {tabela} LIMIT 50")
+            cursor.execute(f"SELECT * FROM {tabela} ")
             colunas = [col[0] for col in cursor.description]
             resultados = cursor.fetchall()
 
