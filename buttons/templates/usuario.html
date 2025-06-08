@@ -71,22 +71,26 @@
       const estadoId = this.value;
       const cidadeSelect = document.getElementById('cidadeid');
       cidadeSelect.innerHTML = '<option value="">Carregando...</option>';
-
-      fetch(`/cidades-por-estado/${estadoId}/`)
-        .then(response => response.json())
-        .then(data => {
-          cidadeSelect.innerHTML = '<option value="">Selecione uma cidade</option>';
-          data.forEach(cidade => {
-            const option = document.createElement('option');
-            option.value = cidade.id;
-            option.textContent = cidade.nome;
-            cidadeSelect.appendChild(option);
+      if (estadoId) {
+        fetch(`/cidades-por-estado/${estadoId}/`)
+          .then(response => response.json())
+          .then(data => {
+            cidadeSelect.innerHTML = '<option value="">Selecione uma cidade</option>';
+            data.forEach(cidade => {
+              const option = document.createElement('option');
+              option.value = cidade.id;
+              option.textContent = cidade.nome;
+              cidadeSelect.appendChild(option);
+            });
+          })
+          .catch(() => {
+            cidadeSelect.innerHTML = '<option value="">Erro ao carregar</option>';
           });
-        })
-        .catch(() => {
-          cidadeSelect.innerHTML = '<option value="">Erro ao carregar</option>';
-        });
+    } else {
+      cidadeSelect.innerHTML = '<option value="">Selecione um estado primeiro</option>';
+    }
     });
   </script>
+
 </body>
 </html>
