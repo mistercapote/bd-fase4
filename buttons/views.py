@@ -1,8 +1,8 @@
 from django.db import connection
 from django.shortcuts import render, redirect
 from django.http import HttpResponseBadRequest, HttpResponse
+from django.http import JsonResponse
 
-# Create your views here.
 def iniciar(request):
     if request.method == "GET":
         return render(request, 'buttons.html')
@@ -21,10 +21,26 @@ def iniciar(request):
         elif acao == "deletar":
             return redirect(f'/deletar/{tabela}')
     return HttpResponseBadRequest("Método não suportado.")
+
+
+def cidades_por_estado(request, estado_id):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT cidadeid, nomecidade FROM cidade WHERE estadoid = %s", [estado_id])
+        rows = cursor.fetchall()
+
+    cidades = [{'id': row[0], 'nome': row[1]} for row in rows]
+    return JsonResponse(cidades, safe=False)
+
 def formulario(request, acao, tabela):
     if request.method == "GET":
-        return render(request, f'{tabela}.html', {'acao': acao})
-
+        if tabela == "usuario":
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT estadoid, nomeestado FROM estado")
+                estados = cursor.fetchall() 
+                estados_dict = [{'estadoid': row[0], 'nomeestado': row[1]} for row in estados]
+                return render(request, 'usuario.html', {'acao': acao, 'estados': estados_dict})
+        else:
+            return render(request, f'{tabela}.html', {'acao': acao})
     elif request.method == "POST":
         query = None
         params = []
@@ -208,17 +224,17 @@ def formulario(request, acao, tabela):
                 params = [datasegaut, usuarioid, autorid]
                 mensagem_sucesso = f"Atualização de seguimento do autor realizada com sucesso!"
 
-        elif tabela == "usravaliaut":
+        elif tabela == "usravaliaaut":
             notautor = request.POST.get('notautor')
             autorid = request.POST.get('autorid')
             usuarioid = request.POST.get('usuarioid')
 
             if acao == "inserir":
-                query = "INSERT INTO usravaliaut (notautor, autorid, usuarioid) VALUES (%s, %s, %s);"
+                query = "INSERT INTO usravaliaaut (notautor, autorid, usuarioid) VALUES (%s, %s, %s);"
                 params = [notautor, autorid, usuarioid]
                 mensagem_sucesso = f"Avaliação do autor inserida com sucesso!"
             elif acao == "atualizar":
-                query = "UPDATE usravaliaut SET notautor = %s WHERE autorid = %s AND usuarioid = %s;"
+                query = "UPDATE usravaliaaut SET notautor = %s WHERE autorid = %s AND usuarioid = %s;"
                 params = [notautor, autorid, usuarioid]
                 mensagem_sucesso = f"Avaliação do autor atualizada com sucesso!"
 
