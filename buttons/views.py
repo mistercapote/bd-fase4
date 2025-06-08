@@ -126,17 +126,17 @@ def formulario(request, acao, tabela):
 
         elif tabela == "avaliacao":
             avalid = request.POST.get('avalid')
-            titulooaval = request.POST.get('titulooaval')
-            corpostaval = request.POST.get('corpostaval')
+            tituloaval = request.POST.get('tituloaval')
+            corpoaval = request.POST.get('corpoaval')
 
             if acao == "inserir":
-                query = "INSERT INTO avaliacao (avalid, titulooaval, corpostaval) VALUES (%s, %s, %s);"
-                params = [avalid, titulooaval, corpostaval]
-                mensagem_sucesso = f"Avaliação {titulooaval} inserida com sucesso!"
+                query = "INSERT INTO avaliacao (avalid, tituloaval, corpoaval) VALUES (%s, %s, %s);"
+                params = [avalid, tituloaval, corpoaval]
+                mensagem_sucesso = f"Avaliação {tituloaval} inserida com sucesso!"
             elif acao == "atualizar":
-                query = "UPDATE avaliacao SET titulooaval = %s, corpostaval = %s WHERE avalid = %s;"
-                params = [titulooaval, corpostaval, avalid]
-                mensagem_sucesso = f"Avaliação {titulooaval} atualizada com sucesso!"
+                query = "UPDATE avaliacao SET tituloaval = %s, corpoaval = %s WHERE avalid = %s;"
+                params = [tituloaval, corpoaval, avalid]
+                mensagem_sucesso = f"Avaliação {tituloaval} atualizada com sucesso!"
 
         elif tabela == "cidade":
             cidadeid = request.POST.get('cidadeid')
