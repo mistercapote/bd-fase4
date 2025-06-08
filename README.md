@@ -19,5 +19,7 @@ Para criar o html, execute:
 ## Contribuições
 
 Elisa de Oliveira Soares
+
 Jaime Willian Carneiro
+
 Luiz Eduardo Bravin
