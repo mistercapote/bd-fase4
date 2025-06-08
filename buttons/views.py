@@ -248,6 +248,46 @@ def listar(request, tabela):
             'tabela': tabela
         })
 
-    
-# def deletar(request, tabela):
-#     id = request.POST.get('id')
+PRIMARY_KEYS = {
+    'usuario': ['usuarioid'],
+    'autor': ['autorid'],
+    'avaliacao': ['avalid'],
+    'cidade': ['cidadeid'],
+    'livroaut': ['livroid', 'autorid'],
+    'usrsegueusr': ['seguidorid', 'seguidoid'],
+    'usravaliaaut': ['usuarioid', 'autorid'],
+    'usrlelivro': ['usuarioid', 'livroid'],
+    'usrsegueaut': ['usuarioid', 'autorid'],
+    'edicao': ['edicaoid'],
+    'editora': ['editoraid'],
+    'livro': ['livroid'],
+}
+
+def deletar(request, tabela):
+    chaves = PRIMARY_KEYS.get(tabela)
+    if not chaves:
+        return HttpResponseBadRequest("Tabela inválida.")
+
+    if request.method == "GET":
+        return render(request, 'deletar.html', {'tabela': tabela, 'chaves': chaves})
+
+    elif request.method == "POST":
+        valores = []
+        condicoes = []
+
+        for chave in chaves:
+            valor = request.POST.get(chave)
+            if not valor:
+                return HttpResponseBadRequest(f"Campo obrigatório: {chave}")
+            condicoes.append(f"{chave} = %s")
+            valores.append(valor)
+
+        query = f"DELETE FROM {tabela} WHERE " + " AND ".join(condicoes)
+
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(query, valores)
+        except Exception as e:
+            return HttpResponseBadRequest(f"Erro ao deletar: {str(e)}")
+
+        return redirect('iniciar')
