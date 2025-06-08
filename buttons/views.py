@@ -225,17 +225,17 @@ def formulario(request, acao, tabela):
                 mensagem_sucesso = f"Atualização de seguimento do autor realizada com sucesso!"
 
         elif tabela == "usravaliaaut":
-            notautor = request.POST.get('notautor')
+            notaautor = request.POST.get('notaautor')
             autorid = request.POST.get('autorid')
             usuarioid = request.POST.get('usuarioid')
 
             if acao == "inserir":
-                query = "INSERT INTO usravaliaaut (notautor, autorid, usuarioid) VALUES (%s, %s, %s);"
-                params = [notautor, autorid, usuarioid]
+                query = "INSERT INTO usravaliaaut (notaautor, autorid, usuarioid) VALUES (%s, %s, %s);"
+                params = [notaautor, autorid, usuarioid]
                 mensagem_sucesso = f"Avaliação do autor inserida com sucesso!"
             elif acao == "atualizar":
-                query = "UPDATE usravaliaaut SET notautor = %s WHERE autorid = %s AND usuarioid = %s;"
-                params = [notautor, autorid, usuarioid]
+                query = "UPDATE usravaliaaut SET notaautor = %s WHERE autorid = %s AND usuarioid = %s;"
+                params = [notaautor, autorid, usuarioid]
                 mensagem_sucesso = f"Avaliação do autor atualizada com sucesso!"
 
         elif tabela == "usurseguusr":
