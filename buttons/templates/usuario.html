@@ -49,11 +49,44 @@
       <label for="apelido">Apelido</label>
       <input type="text" id="apelido" name="apelido" required>
 
-      <label for="cidadeid">ID da Cidade</label>
-      <input type="number" id="cidadeid" name="cidadeid" required min="1">
+      <label for="estado">Estado</label>
+      <select id="estado" name="estado" required>
+        <option value="">Selecione um estado</option>
+        {% for estado in estados %}
+          <option value="{{ estado.estadoid }}">{{ estado.nomeestado }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="cidadeid">Cidade</label>
+      <select id="cidadeid" name="cidadeid" required>
+        <option value="">Selecione uma cidade</option>
+      </select>
 
       <button type="submit">Enviar</button>
     </form>
   </div>
+
+  <script>
+    document.getElementById('estado').addEventListener('change', function () {
+      const estadoId = this.value;
+      const cidadeSelect = document.getElementById('cidadeid');
+      cidadeSelect.innerHTML = '<option value="">Carregando...</option>';
+
+      fetch(`/cidades-por-estado/${estadoId}/`)
+        .then(response => response.json())
+        .then(data => {
+          cidadeSelect.innerHTML = '<option value="">Selecione uma cidade</option>';
+          data.forEach(cidade => {
+            const option = document.createElement('option');
+            option.value = cidade.id;
+            option.textContent = cidade.nome;
+            cidadeSelect.appendChild(option);
+          });
+        })
+        .catch(() => {
+          cidadeSelect.innerHTML = '<option value="">Erro ao carregar</option>';
+        });
+    });
+  </script>
 </body>
 </html>
