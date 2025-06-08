@@ -20,14 +20,15 @@
       <label for="statusleitura">Status da Leitura</label>
       <select id="statusleitura" name="statusleitura" required>
         <option value="">Selecione...</option>
-        <option value="Lendo">Lendo</option>
         <option value="Lido">Lido</option>
-        <option value="Abandonado">Abandonado</option>
+        <option value="Lendo">Lendo</option>
         <option value="Quero Ler">Quero Ler</option>
+        <option value="Relendo">Relendo</option>
+        <option value="Abandonei">Abandonei</option>
       </select>
 
       <label for="notalivro">Nota do Livro (opcional)</label>
-      <input type="number" id="notalivro" name="notalivro" min="0" max="10">
+      <input type="number" id="notalivro" name="notalivro" min="1" max="5">
 
       <label for="usuarioid">ID do Usuário</label>
       <input type="number" id="usuarioid" name="usuarioid" required min="1">
