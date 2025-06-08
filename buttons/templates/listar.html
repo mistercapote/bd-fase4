@@ -44,6 +44,20 @@
       max-width: 90%;
       margin: 0 auto;
     }
+
+    .action-icon {
+      text-decoration: none;
+      font-size: 18px;
+      margin: 0 6px;
+    }
+
+    .edit-icon {
+      color: #2196F3;
+    }
+
+    .delete-icon {
+      color: #f44336;
+    }
   </style>
 </head>
 <body>
@@ -55,6 +69,8 @@
           {% for coluna in colunas %}
             <th>{{ coluna }}</th>
           {% endfor %}
+          <th>Editar</th>
+          <th>Exclui</th>
         </tr>
       </thead>
       <tbody>
@@ -63,12 +79,18 @@
             {% for valor in linha %}
               <td>
                 {% if valor|stringformat:"s"|slice:":8" == "https://" or valor|stringformat:"s"|slice:":7" == "http://" %}
-                    <img src="{{ valor }}" alt="Foto de Perfil" width="60" height="60" style="border-radius: 50%;">
-                  {% else %}
-                    {{ valor }}
-                  {% endif %}
+                  <img src="{{ valor }}" alt="Foto de Perfil" width="60" height="60" style="border-radius: 50%;">
+                {% else %}
+                  {{ valor }}
+                {% endif %}
               </td>
             {% endfor %}
+            <td>
+              <a href="{% url 'editar' tabela linha.0 %}" class="action-icon edit-icon" title="Editar">✏️</a>
+            </td>
+              <td>
+              <a href="{% url 'deletar' tabela linha.0 %}" class="action-icon delete-icon" title="Deletar">🗑️</a>
+            </td>
           </tr>
         {% endfor %}
       </tbody>
