@@ -253,6 +253,7 @@ PRIMARY_KEYS = {
     'autor': ['autorid'],
     'avaliacao': ['avalid'],
     'cidade': ['cidadeid'],
+    'estado': ['estadoid'],
     'livroaut': ['livroid', 'autorid'],
     'usrsegueusr': ['seguidorid', 'seguidoid'],
     'usravaliaaut': ['usuarioid', 'autorid'],
