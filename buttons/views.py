@@ -282,22 +282,21 @@ def deletar(request, tabela):
         return render(request, 'deletar.html', {'tabela': tabela, 'chaves': chaves})
 
     elif request.method == "POST":
-        valores = []
+        idses = []
         condicoes = []
 
         for chave in chaves:
-            valor = request.POST.get(chave)
-            if not valor:
+            ids = request.POST.get(chave)
+            if not ids:
                 return HttpResponseBadRequest(f"Campo obrigatório: {chave}")
             condicoes.append(f"{chave} = %s")
-            valores.append(valor)
+            idses.append(ids)
 
         query = f"DELETE FROM {tabela} WHERE " + " AND ".join(condicoes)
 
         try:
             with connection.cursor() as cursor:
-                cursor.execute(query, valores)
+                cursor.execute(query, idses)
+            return HttpResponse(f"{tabela} {idses} excluido com sucesso")
         except Exception as e:
             return HttpResponseBadRequest(f"Erro ao deletar: {str(e)}")
-
-        return redirect('iniciar')
