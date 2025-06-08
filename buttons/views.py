@@ -144,6 +144,7 @@ def formulario(request, acao, tabela):
             avalid = request.POST.get('avalid')
             tituloaval = request.POST.get('tituloaval')
             corpoaval = request.POST.get('corpoaval')
+            avalid = int(avalid) if avalid else None
 
             if acao == "inserir":
                 query = "INSERT INTO avaliacao (avalid, tituloaval, corpoaval) VALUES (%s, %s, %s);"
