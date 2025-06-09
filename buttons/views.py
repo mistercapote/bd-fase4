@@ -271,9 +271,11 @@ def inserir(request, tabela):
         elif tabela == "usrlelivro":
             statusleitura = request.POST.get('statusleitura')
             notalivro = request.POST.get('notalivro')
+            notalivro = int(notalivro) if notalivro else None
             usuarioid = request.POST.get('usuarioid')
             livroid = request.POST.get('livroid')
             avalid = request.POST.get('avalid')
+            avalid = int(avalid) if avalid else None
             
             # Verificar se o relacionamento já existe
             with connection.cursor() as cursor:
@@ -462,9 +464,11 @@ def editar(request, tabela, params, params2=None):
         elif tabela == "usrlelivro":
             statusleitura = request.POST.get('statusleitura')
             notalivro = request.POST.get('notalivro')
+            notalivro = int(notalivro) if notalivro else None
             usuarioid = params[0]
             livroid = params[1]
             avalid = request.POST.get('avalid')
+            avalid = int(avalid) if avalid else None
             query = ("UPDATE usrlelivro SET statusleitura = %s, notalivro = %s, usuarioid = %s, livroid = %s, avalid = %s WHERE usuarioid = %s AND livroid = %s;")
             parametross = [statusleitura, notalivro, usuarioid, livroid, avalid, usuarioid, livroid]
             mensagem_sucesso = f"Status de leitura atualizado com sucesso!"
