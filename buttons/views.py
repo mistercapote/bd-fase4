@@ -54,12 +54,13 @@ def listar(request, tabela):
             'colunas': colunas,
             'resultados': resultados,
             'tabela': tabela,
-            'tabelas_com_chave_composta': ['livroaut', 'usrlelivro', 'usurseguusr', 'usrsegueaut', 'usravaliaaut'],
-            'tabelas_nao_editaveis': ['livroaut', 'usurseguusr', 'usrsegueaut']
+            'tabelas_com_chave_composta': ['livroaut', 'usrlelivro', 'usrsegueusr', 'usrsegueaut', 'usravaliaaut'],
+            'tabelas_nao_editaveis': ['livroaut', 'usrsegueusr', 'usrsegueaut']
         })
         
-def deletar(request, tabela, *params):
-    # params = list(map(int, params.split("-")))
+def deletar(request, tabela, params, params2=None):
+    if params2: params = [params, params2]
+    else: params = [params]
     chaves = PRIMARY_KEYS.get(tabela)
     if not chaves:
         return HttpResponseBadRequest("Tabela inválida.")
@@ -332,8 +333,9 @@ def inserir(request, tabela):
             except Exception as e:
                 return HttpResponseBadRequest(f"Erro ao inserir: {str(e)}")
 
-def editar(request, tabela, params):
-    params = list(map(int, params.split("-")))
+def editar(request, tabela, params, params2=None):
+    if params2: params = [params, params2]
+    else: params = [params]
     if request.method == "GET":
         chaves = PRIMARY_KEYS.get(tabela)
         query = f"SELECT * FROM {tabela} WHERE " + " AND ".join([f"{chave} = %s" for chave in chaves])
