@@ -24,7 +24,7 @@
       <input type="text" id="siteoficial" name="siteoficial" value="{{ dados.siteoficial|default_if_none:'' }}">
 
       <label for="descricaoeditora">Descrição do Editora</label>
-      <textarea id="descricaoeditora" name="descricaoeditora" rows="4" required>{{ dados.descricaoeditora|default_if_none:'' }}</textarea>
+      <textarea id="descricaoeditora" name="descricaoeditora" rows="4">{{ dados.descricaoeditora|default_if_none:'' }}</textarea>
 
       <button type="submit">Enviar</button>
     </form>
