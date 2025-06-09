@@ -13,7 +13,7 @@
     <h1>{% if dados %}Editar{% else %}Inserir{% endif %} Leitura de Livro</h1>
     <form action="
     {% if dados %}
-      {% url 'editar' 'usrlelivro' dados.usuarioid|add:'-'|add:dados.livroid %}
+      {% url 'editar' 'usrlelivro' dados.usuarioid dados.livroid %}
     {% else %}
       {% url 'inserir' 'usrlelivro' %} %}
     {% endif %}" 
