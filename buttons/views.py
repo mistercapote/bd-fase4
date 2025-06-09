@@ -66,9 +66,7 @@ def deletar(request, tabela, params, params2=None):
         return HttpResponseBadRequest("Tabela inválida.")
     if request.method == "POST":
         try:
-            with transaction.atomic():  # Garante que tudo ocorra numa transação
-
-                # 1. Buscar tabelas que referenciam a atual
+            with transaction.atomic(): 
                 with connection.cursor() as cursor:
                     cursor.execute("""
                         SELECT
