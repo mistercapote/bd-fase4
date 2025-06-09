@@ -59,52 +59,80 @@ def listar(request, tabela):
         })
         
 def deletar(request, tabela, params, params2=None):
-    if params2: params = [params, params2]
-    else: params = [params]
+    if params2: 
+        params = [params, params2]
+    else: 
+        params = [params]
+    
     chaves = PRIMARY_KEYS.get(tabela)
     if not chaves:
         return HttpResponseBadRequest("Tabela inválida.")
+    
     if request.method == "POST":
         try:
             with transaction.atomic(): 
                 with connection.cursor() as cursor:
+                    # 1. Encontrar todas as constraints de chave estrangeira que referenciam nossa tabela
                     cursor.execute("""
                         SELECT
-                            kcu.table_name,
-                            kcu.column_name
+                            conname,
+                            conrelid::regclass AS foreign_table,
+                            a.attname AS foreign_column
                         FROM
-                            information_schema.table_constraints tc
+                            pg_constraint c
                         JOIN
-                            information_schema.key_column_usage kcu
-                            ON tc.constraint_name = kcu.constraint_name
-                            AND tc.constraint_schema = kcu.constraint_schema
+                            pg_namespace n ON n.oid = c.connamespace
                         JOIN
-                            information_schema.referential_constraints rc
-                            ON tc.constraint_name = rc.constraint_name
+                            pg_class cl ON cl.oid = c.conrelid
                         JOIN
-                            information_schema.constraint_column_usage ccu
-                            ON rc.unique_constraint_name = ccu.constraint_name
+                            pg_attribute a ON a.attnum = ANY(c.conkey) AND a.attrelid = c.conrelid
                         WHERE
-                            tc.constraint_type = 'FOREIGN KEY'
-                            AND ccu.table_name = %s
+                            c.confrelid = (SELECT oid FROM pg_class WHERE relname = %s LIMIT 1)
+                            AND c.contype = 'f'
                     """, [tabela])
-                    dependencias = cursor.fetchall()  # [(tabela_dependente, coluna_que_aponta), ...]
+                    dependencias = cursor.fetchall()
+
+                    # Para debug - mostrar as dependências encontradas
+                    print(f"Dependências encontradas para {tabela}: {dependencias}")
 
                 # 2. Deletar dependências
-                for tabela_dep, coluna_fk in dependencias:
-                    delete_query = f"DELETE FROM {tabela_dep} WHERE {coluna_fk} = %s"
-                    # Por simplicidade, assume-se uma única chave primária aqui.
-                    with connection.cursor() as cursor:
-                        cursor.execute(delete_query, [params[0]])
+                for constraint_name, foreign_table, foreign_column in dependencias:
+                    try:
+                        # Construir a query de deleção baseada no tipo de chave
+                        if len(chaves) == 1:
+                            delete_query = f"DELETE FROM {foreign_table} WHERE {foreign_column} = %s"
+                            delete_params = params
+                        else:
+                            # Para chaves compostas
+                            conditions = []
+                            delete_params = []
+                            for i, chave in enumerate(chaves):
+                                if foreign_column.lower() == chave.lower():
+                                    conditions.append(f"{foreign_column} = %s")
+                                    delete_params.append(params[i])
+                            
+                            if not conditions:
+                                continue
+                                
+                            delete_query = f"DELETE FROM {foreign_table} WHERE " + " AND ".join(conditions)
+                        
+                        print(f"Executando: {delete_query} com params {delete_params}")
+                        with connection.cursor() as cursor:
+                            cursor.execute(delete_query, delete_params)
+                    except Exception as e:
+                        print(f"Erro ao deletar de {foreign_table}: {str(e)}")
+                        raise
 
                 # 3. Deletar da tabela principal
                 delete_principal = f"DELETE FROM {tabela} WHERE " + " AND ".join([f"{chave} = %s" for chave in chaves])
+                print(f"Executando principal: {delete_principal} com params {params}")
                 with connection.cursor() as cursor:
                     cursor.execute(delete_principal, params)
+                
                 return redirect(f"/listar/{tabela}")
+                
         except Exception as e:
             return HttpResponseBadRequest(f"Erro ao deletar: {str(e)}")
-
 def inserir(request, tabela):
     if request.method == "GET":
         if tabela == "usuario":
