@@ -394,20 +394,20 @@ def editar(request, tabela, params, params2=None):
         
     elif request.method == "POST":
         query = None
-        parametross = []
+        parametros = []
         mensagem_sucesso = ""
 
         if tabela == "estado":
             estadoid = params[0]
             nomeestado = request.POST.get('nomeestado')
             query = "UPDATE estado SET nomeestado = %s WHERE estadoid = %s;"
-            parametross = [nomeestado, estadoid]
+            parametros = [nomeestado, estadoid]
             mensagem_sucesso = f"Estado {nomeestado} atualizado com sucesso!"
         elif tabela == "livro":
             livroid = params[0]
             nomelivro = request.POST.get('nomelivro')
             query = "UPDATE livro SET nomelivro = %s WHERE livroid = %s;"
-            parametross = [nomelivro, livroid]
+            parametros = [nomelivro, livroid]
             mensagem_sucesso = f"Livro {nomelivro} atualizado com sucesso!"
         elif tabela == "editora":
             editoraid = params[0]
@@ -416,20 +416,20 @@ def editar(request, tabela, params, params2=None):
             descricaoeditora = request.POST.get('descricaoeditora')
             query = ("UPDATE editora SET nomeeditora = %s, siteoficial = %s, descricaoeditora = %s "
                         "WHERE editoraid = %s;")
-            parametross = [nomeeditora, siteoficial, descricaoeditora, editoraid]
+            parametros = [nomeeditora, siteoficial, descricaoeditora, editoraid]
             mensagem_sucesso = f"Editora {nomeeditora} atualizada com sucesso!"
         elif tabela == "autor":
             autorid = params[0]
             nomeautor = request.POST.get('nomeautor')
             descricaoautor = request.POST.get('descricaoautor')
             query = "UPDATE autor SET nomeautor = %s, descricaoautor = %s WHERE autorid = %s;"
-            parametross = [nomeautor, descricaoautor, autorid]
+            parametros = [nomeautor, descricaoautor, autorid]
             mensagem_sucesso = f"Autor {nomeautor} atualizado com sucesso!"
         elif tabela == "livroaut":
             livroid = params[0]
             autorid = params[1]
             query = "UPDATE livroaut SET autorid = %s WHERE livroid = %s;"
-            parametross = [autorid, livroid]
+            parametros = [autorid, livroid]
             mensagem_sucesso = f"Relacionamento Livro-Autor atualizado com sucesso!"
         elif tabela == "edicao":
             edicaoid = params[0]
@@ -442,7 +442,7 @@ def editar(request, tabela, params, params2=None):
             livroid = request.POST.get('livroid')
             editoraid = request.POST.get('editoraid')
             query = ("UPDATE edicao SET anopublicacao = %s, isbn13 = %s, isbn10 = %s, idioma = %s, numpaginas = %s, descricaoedicao = %s, livroid = %s, editoraid = %s WHERE edicaoid = %s;")
-            parametross = [anopublicacao, isbn13, isbn10, idioma, numpaginas, descricaoedicao, livroid, editoraid, edicaoid]
+            parametros = [anopublicacao, isbn13, isbn10, idioma, numpaginas, descricaoedicao, livroid, editoraid, edicaoid]
             mensagem_sucesso = f"Edição {edicaoid} atualizada com sucesso!"
         elif tabela == "avaliacao":
             avalid = params[0]
@@ -450,14 +450,14 @@ def editar(request, tabela, params, params2=None):
             corpoaval = request.POST.get('corpoaval')
             avalid = int(avalid) if avalid else None
             query = "UPDATE avaliacao SET tituloaval = %s, corpoaval = %s WHERE avalid = %s;"
-            parametross = [tituloaval, corpoaval, avalid]
+            parametros = [tituloaval, corpoaval, avalid]
             mensagem_sucesso = f"Avaliação {tituloaval} atualizada com sucesso!"
         elif tabela == "cidade":
             cidadeid = params[0]
             nomecidade = request.POST.get('nomecidade')
             estadoid = request.POST.get('estadoid')
             query = "UPDATE cidade SET nomecidade = %s, estadoid = %s WHERE cidadeid = %s;"
-            parametross = [nomecidade, estadoid, cidadeid]
+            parametros = [nomecidade, estadoid, cidadeid]
             mensagem_sucesso = f"Cidade {nomecidade} atualizada com sucesso!"
         elif tabela == "usuario":
             usuarioid = params[0]
@@ -470,8 +470,10 @@ def editar(request, tabela, params, params2=None):
             biografia = request.POST.get('biografia')
             apelido = request.POST.get('apelido')
             cidadeid = request.POST.get('cidadeid')
+            datanascimento = datanascimento if datanascimento else None
+            genero = int(genero) if genero else None
             query = ("UPDATE usuario SET nomeusuario = %s, senha = %s, emailusuario = %s, datanascimento = %s, genero = %s, fotoperfil = %s, biografia = %s, apelido = %s, cidadeid = %s WHERE usuarioid = %s;")
-            parametross = [nomeusuario, senha, emailusuario, datanascimento, genero, fotoperfil, biografia, apelido, cidadeid, usuarioid]
+            parametros = [nomeusuario, senha, emailusuario, datanascimento, genero, fotoperfil, biografia, apelido, cidadeid, usuarioid]
             mensagem_sucesso = f"Usuário {nomeusuario} atualizado com sucesso!"
             
             # Verificar se o email já está sendo usado por OUTRO usuário
@@ -484,7 +486,7 @@ def editar(request, tabela, params, params2=None):
             query = ("UPDATE usuario SET nomeusuario = %s, senha = %s, emailusuario = %s, "
                     "datanascimento = %s, genero = %s, fotoperfil = %s, biografia = %s, "
                     "apelido = %s, cidadeid = %s WHERE usuarioid = %s;")
-            parametross = [nomeusuario, senha, emailusuario, datanascimento, genero, 
+            parametros = [nomeusuario, senha, emailusuario, datanascimento, genero, 
                      fotoperfil, biografia, apelido, cidadeid, usuarioid]
         
         elif tabela == "usrlelivro":
@@ -496,33 +498,33 @@ def editar(request, tabela, params, params2=None):
             avalid = request.POST.get('avalid')
             avalid = int(avalid) if avalid else None
             query = ("UPDATE usrlelivro SET statusleitura = %s, notalivro = %s, usuarioid = %s, livroid = %s, avalid = %s WHERE usuarioid = %s AND livroid = %s;")
-            parametross = [statusleitura, notalivro, usuarioid, livroid, avalid, usuarioid, livroid]
+            parametros = [statusleitura, notalivro, usuarioid, livroid, avalid, usuarioid, livroid]
             mensagem_sucesso = f"Status de leitura atualizado com sucesso!"
         elif tabela == "usrsegueaut":
             datasegaut = request.POST.get('datasegaut')
             usuarioid = params[0]
             autorid = params[0]
             query = "UPDATE usrsegueaut SET datasegaut = %s WHERE usuarioid = %s AND autorid = %s;"
-            parametross = [datasegaut, usuarioid, autorid]
+            parametros = [datasegaut, usuarioid, autorid]
             mensagem_sucesso = f"Atualização de seguimento do autor realizada com sucesso!"
         elif tabela == "usravaliaaut":
             notaautor = request.POST.get('notaautor')
             usuarioid = params[0]
             autorid = params[1]
             query = "UPDATE usravaliaaut SET notaautor = %s WHERE autorid = %s AND usuarioid = %s;"
-            parametross = [notaautor, autorid, usuarioid]
+            parametros = [notaautor, autorid, usuarioid]
             mensagem_sucesso = f"Avaliação do autor atualizada com sucesso!"
         elif tabela == "usrsegueusr":
             datasegusr = request.POST.get('datasegusr')
             seguidorid = params[0]
             seguidoid = params[1]
             query = "UPDATE usrsegueusr SET datasegusr = %s WHERE seguidorid = %s AND seguidoid = %s;"
-            parametross = [datasegusr, seguidorid, seguidoid]
+            parametros = [datasegusr, seguidorid, seguidoid]
             mensagem_sucesso = f"Atualização de seguimento de usuário realizada com sucesso!"
         else:
             return HttpResponseBadRequest("Tabela inválida.")
 
         if query:
             with connection.cursor() as cursor:
-                cursor.execute(query, parametross)
+                cursor.execute(query, parametros)
             return redirect(f"/listar/{tabela}")
