@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -86,10 +87,26 @@
               </td>
             {% endfor %}
             <td>
-              <a href="{% url 'editar' tabela linha.0 %}" class="action-icon edit-icon" title="Editar">✏️</a>
+              {% if linha|length > 1 and tabela in tabelas_com_chave_composta %}
+                <a href="{% url 'editar' tabela linha.0 linha.1 %}" class="action-icon edit-icon" title="Editar">
+                  <img src="{% static 'icons/edit.png' %}" alt="Editar" width="20" height="20">
+                </a>
+              {% else %}
+                <a href="{% url 'editar' tabela linha.0 %}" class="action-icon edit-icon" title="Editar">
+                  <img src="{% static 'icons/edit.png' %}" alt="Editar" width="20" height="20">
+                </a>
+              {% endif %}
             </td>
               <td>
-              <a href="{% url 'deletar' tabela linha.0 %}" class="action-icon delete-icon" title="Deletar">🗑️</a>
+              {% if linha|length > 1 and tabela in tabelas_com_chave_composta %}
+                <a href="{% url 'deletar' tabela linha.0 linha.1 %}" class="action-icon delete-icon" title="Deletar">
+                  <img src="{% static 'icons/delete.png' %}" alt="Deletar" width="20" height="20">
+                </a>
+              {% else %}
+                <a href="{% url 'deletar' tabela linha.0 %}" class="action-icon delete-icon" title="Deletar">
+                  <img src="{% static 'icons/delete.png' %}" alt="Deletar" width="20" height="20">
+                </a>
+              {% endif %}
             </td>
           </tr>
         {% endfor %}

@@ -57,9 +57,10 @@ def listar(request, tabela):
         return render(request, 'listar.html', {
             'colunas': colunas,
             'resultados': resultados,
-            'tabela': tabela
+            'tabela': tabela,
+            'tabelas_com_chave_composta': ['usrlelivro', 'usurseguusr', 'usrsegueaut', 'usravaliaaut']
         })
-
+        
 def deletar(request, tabela, *params):
     chaves = PRIMARY_KEYS.get(tabela)
     if not chaves:
