@@ -11,7 +11,7 @@
 <body>
   <div class="form-container">
     <h1>Inserir Livroaut</h1>
-     <form action="{% url 'inserir' 'livroaut'  dados.livroid|add:'-'|add:dados.autorid %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
+     <form action="{% url 'inserir' 'livroaut'  %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
 
       <label for="livroid">ID do Livro</label>
       <input type="number" id="livroid" name="livroid" required min="1">
