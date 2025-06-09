@@ -3,20 +3,27 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Registrar Leitura de Livro</title>
+  <title>{% if dados %}Editar{% else %}Inserir{% endif %} Leitura de Livro</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="{% static 'css/style.css' %}" rel="stylesheet">
   
 </head>
 <body>
   <div class="form-container">
-    <h1>Registrar Leitura de Livro</h1>
-     <form action="{% if acao == 'inserir' %}
-                    {% url 'formulario' 'inserir' 'usrlelivro' %}
-                  {% elif acao == 'atualizar' %}
-                    {% url 'formulario' 'atualizar' 'usrlelivro' %}
-                  {% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
+    <h1>{% if dados %}Editar{% else %}Inserir{% endif %} Leitura de Livro</h1>
+    <form action="
+    {% if dados %}
+      {% url 'editar' 'usrlelivro' dados.usuarioid|add:'-'|add:dados.livroid %}
+    {% else %}
+      {% url 'inserir' 'usrlelivro' %} %}
+    {% endif %}" 
+    enctype="multipart/form-data" method="POST"> {% csrf_token %}
+      
+      <label for="usuarioid">ID do Usuário</label>
+      <input type="number" id="usuarioid" name="usuarioid" required min="1">
 
+      <label for="livroid">ID do Livro</label>
+      <input type="number" id="livroid" name="livroid" required min="1">
       <label for="statusleitura">Status da Leitura</label>
       <select id="statusleitura" name="statusleitura" required>
         <option value="">Selecione...</option>
@@ -30,11 +37,7 @@
       <label for="notalivro">Nota do Livro (opcional)</label>
       <input type="number" id="notalivro" name="notalivro" min="1" max="5">
 
-      <label for="usuarioid">ID do Usuário</label>
-      <input type="number" id="usuarioid" name="usuarioid" required min="1">
-
-      <label for="livroid">ID do Livro</label>
-      <input type="number" id="livroid" name="livroid" required min="1">
+      
 
       <label for="avalid">ID da Avaliação (opcional)</label>
       <input type="number" id="avalid" name="avalid" min="1">
