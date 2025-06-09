@@ -8,7 +8,7 @@ Para instalar as bibliotecas necessárias, execute:
   pip install -r requirements.txt
 ```
 
-## Rodar o servidos
+## Rodar o servidor
 
 Para criar o html, execute:
 ```bash
