@@ -12,10 +12,10 @@
   <div class="form-container">
     <h1>{% if dados %}Editar{% else %}Inserir{% endif %} Livro</h1>
      <form action="{% if dados %}{% url 'editar' 'livro' dados.livroid %}{% else %}{% url 'inserir' 'livro' %}{% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
-
+      {% if not dados %}
       <label for="livroid">ID do Livro</label>
       <input type="number" id="livroid" name="livroid" required min="1" value="{{ dados.livroid|default_if_none:'' }}">
-
+      {% endif %}
       <label for="nomelivro">Nome do Livro</label>
       <input type="text" id="nomelivro" name="nomelivro" maxlength="64" required value="{{ dados.nomelivro|default_if_none:'' }}">
 

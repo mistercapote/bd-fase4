@@ -20,13 +20,13 @@
     enctype="multipart/form-data" method="POST"> {% csrf_token %}
 
 
-
+      {% if not dados %}
       <label for="usuarioid">ID do Usuário</label>
       <input type="number" id="usuarioid" name="usuarioid" required min="1" value="{{ dados.usuarioid|default_if_none:'' }}">
 
       <label for="autorid">ID do Autor</label>
       <input type="number" id="autorid" name="autorid" required min="1" value="{{ dados.autorid|default_if_none:'' }}">
-
+      {% endif %}
       <label for="notaautor">Nota do Autor </label>
       <input type="number" id="notaautor" name="notaautor" min="1" max="5" required value="{{ dados.notaautor|default_if_none:'' }}">
 
