@@ -70,8 +70,10 @@
           {% for coluna in colunas %}
             <th>{{ coluna }}</th>
           {% endfor %}
-          <th>Editar</th>
-          <th>Exclui</th>
+          {% if tabela in not tabelas_nao_editaveis %}
+            <th>Editar</th>
+          {% endif %}
+          <th>Excluir</th>
         </tr>
       </thead>
       <tbody>
@@ -94,25 +96,23 @@
                 {% endif %}
               </td>
             {% endfor %}
-            <td>
-              {% if linha|length > 1 and tabela in tabelas_com_chave_composta %}
-                <a href="{% url 'editar' tabela linha.0|add:'-'|add:linha.1 %}" class="action-icon edit-icon" title="Editar">
-                  <img src="{% static 'icons/edit.png' %}" alt="Editar" width="20" height="20">
-                </a>
-              {% else %}
+              {% if tabela in not tabelas_nao_editaveis %}
+              <td>
                 <a href="{% url 'editar' tabela linha.0 %}" class="action-icon edit-icon" title="Editar">
                   <img src="{% static 'icons/edit.png' %}" alt="Editar" width="20" height="20">
                 </a>
+              </td>
               {% endif %}
-            </td>
               <td>
               {% if linha|length > 1 and tabela in tabelas_com_chave_composta %}
-                <form action="{% url 'deletar' tabela linha.0|add:'-'|add:linha.1 %}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir este registro?');">
-                {% csrf_token %}
-                <button type="submit" class="action-icon delete-icon" style="background:none; border:none; padding:0; cursor:pointer;">
-                  <img src="{% static 'icons/delete.png' %}" alt="Deletar" width="20" height="20">
-                </button>
-              </form>
+              {% with linha.0|add:"-"|add:linha.1 as chave_composta %}
+                  <form action="{% url 'deletar' chave_composta %}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir este registro?');">
+                  {% csrf_token %}
+                  <button type="submit" class="action-icon delete-icon" style="background:none; border:none; padding:0; cursor:pointer;">
+                    <img src="{% static 'icons/delete.png' %}" alt="Deletar" width="20" height="20">
+                  </button>
+                </form>
+              {% endwith %}
               {% else %}
                 <form action="{% url 'deletar' tabela linha.0 %}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir este registro?');">
                 {% csrf_token %}

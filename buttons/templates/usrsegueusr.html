@@ -11,20 +11,17 @@
 <body>
   <div class="form-container">
     <h1>Registrar Seguimento</h1>
-     <form action="{% if acao == 'inserir' %}
-                    {% url 'formulario' 'inserir' 'usrsegueusr' %}
-                  {% elif acao == 'atualizar' %}
-                    {% url 'formulario' 'atualizar' 'usrsegueusr' %}
-                  {% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
-
-      <label for="datasegusr">Data do Seguimento</label>
-      <input type="date" id="datasegusr" name="datasegusr" required>
+     <form action="{% url 'inserir' 'usrsegueusr' %}" 
+    enctype="multipart/form-data" method="POST"> {% csrf_token %}
 
       <label for="seguidorid">ID do Seguidor</label>
       <input type="number" id="seguidorid" name="seguidorid" required min="1">
 
       <label for="seguidoid">ID do Seguido</label>
       <input type="number" id="seguidoid" name="seguidoid" required min="1">
+
+      <label for="datasegusr">Data do Seguimento</label>
+      <input type="date" id="datasegusr" name="datasegusr" required>
 
       <button type="submit">Enviar</button>
     </form>

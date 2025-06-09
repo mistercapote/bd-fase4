@@ -3,26 +3,21 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Inserir Avaliação</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% if dados %}Editar{% else %}Inserir{% endif %} Avaliação</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="{% static 'css/style.css' %}" rel="stylesheet">
 </head>
 <body>
   <div class="form-container">
-    <h1>Inserir Avaliação</h1>
-     <form action="{% if acao == 'inserir' %}
-                    {% url 'formulario' 'inserir' 'avaliacao' %}
-                  {% elif acao == 'atualizar' %}
-                    {% url 'formulario' 'atualizar' 'avaliacao' %}
-                  {% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
+    <h1>{% if dados %}Editar{% else %}Inserir{% endif %} Avaliação</h1>
+    <form action="{% if dados %}{% url 'editar' 'avaliacao' dados.avalid %}{% else %}{% url 'inserir' 'avaliacao' %}{% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
       <label for="avalid">ID da Avaliação</label>
-      <input type="number" id="avalid" name="avalid" required min="1">
+      <input type="number" id="avalid" name="avalid" required min="1" value="{{ dados.avalid|default_if_none:'' }}">
 
       <label for="tituloaval">Título da Avaliação</label>
-      <input type="text" id="tituloaval" name="tituloaval" required>
+      <input type="text" id="tituloaval" name="tituloaval" required value="{{ dados.tituloaval|default_if_none:'' }}">
 
       <label for="corpoaval">Corpo da Avaliação</label>
-      <textarea id="corpoaval" name="corpoaval" rows="5" required></textarea>
+      <textarea id="corpoaval" name="corpoaval" rows="5" required>{{ dados.corpoaval|default_if_none:'' }}</textarea>
 
       <button type="submit">Enviar</button>
     </form>

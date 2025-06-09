@@ -20,27 +20,25 @@
     enctype="multipart/form-data" method="POST"> {% csrf_token %}
       
       <label for="usuarioid">ID do Usuário</label>
-      <input type="number" id="usuarioid" name="usuarioid" required min="1">
+      <input type="number" id="usuarioid" name="usuarioid" required min="1" value="{{ dados.usuarioid|default_if_none:'' }}">
 
       <label for="livroid">ID do Livro</label>
-      <input type="number" id="livroid" name="livroid" required min="1">
+      <input type="number" id="livroid" name="livroid" required min="1" value="{{ dados.livroid|default_if_none:'' }}">
       <label for="statusleitura">Status da Leitura</label>
       <select id="statusleitura" name="statusleitura" required>
         <option value="">Selecione...</option>
-        <option value="Lido">Lido</option>
-        <option value="Lendo">Lendo</option>
-        <option value="Quero Ler">Quero Ler</option>
-        <option value="Relendo">Relendo</option>
-        <option value="Abandonei">Abandonei</option>
+        <option value="Lido" {% if dados.statusleitura == "Lido" %}selected{% endif %}>Lido</option>
+        <option value="Lendo" {% if dados.statusleitura == "Lendo" %}selected{% endif %}>Lendo</option>
+        <option value="Quero Ler" {% if dados.statusleitura == "Quero Ler" %}selected{% endif %}>Quero Ler</option>
+        <option value="Relendo" {% if dados.statusleitura == "Relendo" %}selected{% endif %}>Relendo</option>
+        <option value="Abandonei" {% if dados.statusleitura == "Abandonei" %}selected{% endif %}>Abandonei</option>
       </select>
 
       <label for="notalivro">Nota do Livro (opcional)</label>
-      <input type="number" id="notalivro" name="notalivro" min="1" max="5">
-
-      
+      <input type="number" id="notalivro" name="notalivro" min="1" max="5" value="{{ dados.notalivro|default_if_none:'' }}">
 
       <label for="avalid">ID da Avaliação (opcional)</label>
-      <input type="number" id="avalid" name="avalid" min="1">
+      <input type="number" id="avalid" name="avalid" min="1" value="{{ dados.avalid|default_if_none:'' }}">
 
       <button type="submit">Enviar</button>
     </form>
