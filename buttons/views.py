@@ -445,6 +445,20 @@ def editar(request, tabela, params, params2=None):
             query = ("UPDATE usuario SET nomeusuario = %s, senha = %s, emailusuario = %s, datanascimento = %s, genero = %s, fotoperfil = %s, biografia = %s, apelido = %s, cidadeid = %s WHERE usuarioid = %s;")
             params = [nomeusuario, senha, emailusuario, datanascimento, genero, fotoperfil, biografia, apelido, cidadeid, usuarioid]
             mensagem_sucesso = f"Usuário {nomeusuario} atualizado com sucesso!"
+            
+            # Verificar se o email já está sendo usado por OUTRO usuário
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT 1 FROM usuario WHERE emailusuario = %s AND usuarioid != %s", 
+                              [emailusuario, usuarioid])
+                if cursor.fetchone():
+                    return HttpResponseBadRequest(f"Erro: O email {emailusuario} já está cadastrado para outro usuário.")
+            
+            query = ("UPDATE usuario SET nomeusuario = %s, senha = %s, emailusuario = %s, "
+                    "datanascimento = %s, genero = %s, fotoperfil = %s, biografia = %s, "
+                    "apelido = %s, cidadeid = %s WHERE usuarioid = %s;")
+            params = [nomeusuario, senha, emailusuario, datanascimento, genero, 
+                     fotoperfil, biografia, apelido, cidadeid, usuarioid]
+        
         elif tabela == "usrlelivro":
             statusleitura = request.POST.get('statusleitura')
             notalivro = request.POST.get('notalivro')
@@ -479,20 +493,7 @@ def editar(request, tabela, params, params2=None):
             return HttpResponseBadRequest("Tabela inválida.")
 
         if query:
-            chaves = PRIMARY_KEYS.get(tabela)
-            if chaves:
-                condicao_where = " AND ".join([f"{chave} = %s" for chave in chaves])
-                valores_chave = [request.POST.get(chave) for chave in chaves]
-
-                # Verificação se algum campo de chave primária está vazio
-                if None in valores_chave or "" in valores_chave:
-                    return HttpResponseBadRequest("Erro: campo de chave primária ausente.")
-
-                # Verifica se já existe um registro com a mesma chave
-                with connection.cursor() as cursor:
-                    cursor.execute(f"SELECT 1 FROM {tabela} WHERE {condicao_where}", valores_chave)
-                    if cursor.fetchone():
-                        return HttpResponseBadRequest("Erro: já existe um registro com a mesma chave primária.")
-                # Agora sim pode executar o insert
-                with connection.cursor() as cursor:
-                    cursor.execute(query, params)
+            with connection.cursor() as cursor:
+                cursor.execute(query, params)
+            return HttpResponse(mensagem_sucesso)
+   
