@@ -45,9 +45,7 @@ h1 {
 }
 
 .btn-inserir    { background-color: #4CAF50; color: white; }
-.btn-atualizar  { background-color: #2196F3; color: white; }
 .btn-listar   { background-color: #FFC107; color: black; }
-.btn-deletar    { background-color: #F44336; color: white; }
 
 .btn-table {
     background-color: #e0e0e0;

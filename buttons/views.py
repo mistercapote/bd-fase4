@@ -29,13 +29,9 @@ def iniciar(request):
         if not acao or not tabela:
             return HttpResponseBadRequest("Ação e tabela são obrigatórias.")
         if acao == "inserir":
-            return redirect(f'/formulario/inserir/{tabela}')
-        elif acao == "atualizar":
-            return redirect(f'/formulario/atualizar/{tabela}')
+            return redirect(f'/inserir/{tabela}')
         elif acao == "listar":
             return redirect(f'/listar/{tabela}')
-        elif acao == "deletar":
-            return redirect(f'/deletar/{tabela}')
     return HttpResponseBadRequest("Método não suportado.")
 
 def cidades_por_estado(request, estado_id):
@@ -61,7 +57,8 @@ def listar(request, tabela):
             'tabelas_com_chave_composta': ['usrlelivro', 'usurseguusr', 'usrsegueaut', 'usravaliaaut']
         })
         
-def deletar(request, tabela, *params):
+def deletar(request, tabela, params):
+    params = list(map(int, params.split("-")))
     chaves = PRIMARY_KEYS.get(tabela)
     if not chaves:
         return HttpResponseBadRequest("Tabela inválida.")
@@ -70,7 +67,7 @@ def deletar(request, tabela, *params):
         try:
             with connection.cursor() as cursor:
                 cursor.execute(query, params)
-            return HttpResponse(f"{tabela} {params} excluido com sucesso")
+            return redirect(f'/listar/{tabela}')
         except Exception as e:
             return HttpResponseBadRequest(f"Erro ao deletar: {str(e)}")
 
@@ -202,7 +199,8 @@ def inserir(request, tabela):
                 cursor.execute(query, params)
             return HttpResponse(mensagem_sucesso)
 
-def editar(request, tabela, *params):
+def editar(request, tabela, params):
+    params = list(map(int, params.split("-")))
     if request.method == "GET":
         chaves = PRIMARY_KEYS.get(tabela)
         query = f"SELECT * FROM {tabela} WHERE " + " AND ".join([f"{chave} = %s" for chave in chaves])
@@ -217,7 +215,17 @@ def editar(request, tabela, *params):
                 cursor.execute("SELECT estadoid, nomeestado FROM estado")
                 estados = cursor.fetchall() 
                 estados_dict = [{'estadoid': row[0], 'nomeestado': row[1]} for row in estados]
-            return render(request, 'usuario.html', {'dados': dados, 'estados': estados_dict})
+                
+            estado_selecionado = None
+            cidadeid = dados.get('cidadeid')
+            if cidadeid:
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT estadoid FROM cidade WHERE cidadeid = %s", [cidadeid])
+                    resultado = cursor.fetchone()
+                    if resultado:
+                        estado_selecionado = resultado[0]
+                    
+            return render(request, 'usuario.html', {'dados': dados, 'estados': estados_dict, 'estado_selecionado': estado_selecionado,})
         else:
             return render(request, f"{tabela}.html", {'dados': dados})
         
