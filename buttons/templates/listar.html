@@ -79,16 +79,24 @@
           <tr>
             {% for valor in linha %}
               <td>
-                {% if valor|stringformat:"s"|slice:":8" == "https://" or valor|stringformat:"s"|slice:":7" == "http://" %}
-                  <img src="{{ valor }}" alt="Foto de Perfil" width="60" height="60" style="border-radius: 50%;">
-                {% else %}
+                {% if tabela == "usuario"%}
+                  {% if valor|stringformat:"s"|slice:":8" == "https://" or valor|stringformat:"s"|slice:":7" == "http://" %}
+                    <img src="{{ valor }}" alt="Foto de Perfil" width="60" height="60" style="border-radius: 50%;">
+                  {% elif linha.5 == valor and valor == 0%}
+                    Feminino
+                  {% elif linha.5 == valor and valor == 1%}
+                    Masculino
+                  {% elif valor != None %}
+                    {{ valor }}
+                  {% endif %}
+                {% elif valor != None %}
                   {{ valor }}
                 {% endif %}
               </td>
             {% endfor %}
             <td>
               {% if linha|length > 1 and tabela in tabelas_com_chave_composta %}
-                <a href="{% url 'editar' tabela linha.0 linha.1 %}" class="action-icon edit-icon" title="Editar">
+                <a href="{% url 'editar' tabela linha.0|add:'-'|add:linha.1 %}" class="action-icon edit-icon" title="Editar">
                   <img src="{% static 'icons/edit.png' %}" alt="Editar" width="20" height="20">
                 </a>
               {% else %}
@@ -99,13 +107,19 @@
             </td>
               <td>
               {% if linha|length > 1 and tabela in tabelas_com_chave_composta %}
-                <a href="{% url 'deletar' tabela linha.0 linha.1 %}" class="action-icon delete-icon" title="Deletar">
+                <form action="{% url 'deletar' tabela linha.0|add:'-'|add:linha.1 %}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir este registro?');">
+                {% csrf_token %}
+                <button type="submit" class="action-icon delete-icon" style="background:none; border:none; padding:0; cursor:pointer;">
                   <img src="{% static 'icons/delete.png' %}" alt="Deletar" width="20" height="20">
-                </a>
+                </button>
+              </form>
               {% else %}
-                <a href="{% url 'deletar' tabela linha.0 %}" class="action-icon delete-icon" title="Deletar">
+                <form action="{% url 'deletar' tabela linha.0 %}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir este registro?');">
+                {% csrf_token %}
+                <button type="submit" class="action-icon delete-icon" style="background:none; border:none; padding:0; cursor:pointer;">
                   <img src="{% static 'icons/delete.png' %}" alt="Deletar" width="20" height="20">
-                </a>
+                </button>
+              </form>
               {% endif %}
             </td>
           </tr>
@@ -113,5 +127,6 @@
       </tbody>
     </table>
   </div>
+
 </body>
 </html>
