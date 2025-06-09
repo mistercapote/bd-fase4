@@ -37,7 +37,7 @@
       </select>
 
       <label for="fotoperfil">Link da Foto de Perfil</label>
-      <input type="url" id="fotoperfil" name="fotoperfil" placeholder="https://exemplo.com/imagem.jpg" required value="{{ dados.fotoperfil|default_if_none:'' }}">
+      <input type="url" id="fotoperfil" name="fotoperfil" placeholder="https://exemplo.com/imagem.jpg" value="{{ dados.fotoperfil|default_if_none:'' }}">
 
       <label for="biografia">Biografia</label>
       <textarea id="biografia" name="biografia" rows="3">{{ dados.biografia|default_if_none:'' }}</textarea>
