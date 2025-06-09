@@ -103,7 +103,9 @@
       <thead>
         <tr>
           {% for coluna in colunas %}
-            <th>{{ coluna }}</th>
+            {% if coluna != "senha" %}
+              <th>{{ coluna }}</th>
+            {% endif %}
           {% endfor %}
           {% if tabela not in tabelas_nao_editaveis %}
             <th>Editar</th>
@@ -115,21 +117,24 @@
         {% for linha in resultados %}
           <tr>
             {% for valor in linha %}
-              <td>
                 {% if tabela == "usuario"%}
                   {% if valor|stringformat:"s"|slice:":8" == "https://" or valor|stringformat:"s"|slice:":7" == "http://" %}
-                    <img src="{{ valor }}" alt="Foto de Perfil" width="60" height="60" style="border-radius: 50%;">
+                    <td><img src="{{ valor }}" alt="Foto de Perfil" width="60" height="60" style="border-radius: 50%;"></td>
+                  {% elif linha.2 == valor %}
                   {% elif linha.5 == valor and valor == 0%}
-                    Feminino
+                    <td>Feminino</td>
                   {% elif linha.5 == valor and valor == 1%}
-                    Masculino
+                    <td>Masculino</td>
                   {% elif valor != None %}
-                    {{ valor }}
+                    <td>{{ valor }}</td>
+                  {% else %}
+                    <td></td>
                   {% endif %}
                 {% elif valor != None %}
-                  {{ valor }}
+                 <td>{{ valor }}</td>
+                {% else %}
+                 <td></td>
                 {% endif %}
-              </td>
             {% endfor %}
               {% if tabela not in tabelas_nao_editaveis %}
                 <td>
