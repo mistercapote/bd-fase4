@@ -1,6 +1,6 @@
 from django.db import connection, transaction
 from django.shortcuts import render, redirect
-from django.http import HttpResponseBadRequest, HttpResponse
+from django.http import HttpResponseBadRequest
 from django.http import JsonResponse
 
 PRIMARY_KEYS = {
@@ -525,4 +525,4 @@ def editar(request, tabela, params, params2=None):
         if query:
             with connection.cursor() as cursor:
                 cursor.execute(query, parametross)
-            return HttpResponse(mensagem_sucesso)
+            return redirect(f"/listar/{tabela}")
