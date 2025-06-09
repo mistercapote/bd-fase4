@@ -15,7 +15,7 @@
     {% if dados %}
       {% url 'editar' 'usrlelivro' dados.usuarioid dados.livroid %}
     {% else %}
-      {% url 'inserir' 'usrlelivro' %} %}
+      {% url 'inserir' 'usrlelivro' %}
     {% endif %}" 
     enctype="multipart/form-data" method="POST"> {% csrf_token %}
       {% if not dados %}
