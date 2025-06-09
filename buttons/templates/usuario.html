@@ -3,63 +3,65 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Inserir Usuário</title>
+  <title>{% if dados %}Editar{% else %}Inserir{% endif %} Usuário</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="{% static 'css/style.css' %}" rel="stylesheet">
-  
 </head>
 <body>
   <div class="form-container">
-    <h1>Inserir Usuário</h1>
-    <form action="{% if acao == 'inserir' %}
-                    {% url 'formulario' 'inserir' 'usuario' %}
-                  {% elif acao == 'atualizar' %}
-                    {% url 'formulario' 'atualizar' 'usuario' %}
-                  {% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
-      
+    <h1>{% if dados %}Editar{% else %}Inserir{% endif %} Usuário</h1>
+    
+    <form action="{% if dados %}{% url 'atualizar' 'usuario' %}{% else %}{% url 'inserir' 'usuario' %}{% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
+
       <label for="usuarioid">ID do Usuário</label>
-      <input type="number" id="usuarioid" name="usuarioid" required min="1">
+      <input type="number" id="usuarioid" name="usuarioid" required min="1" value="{{ dados.usuarioid|default_if_none:'' }}">
 
       <label for="nomeusuario">Nome de Usuário</label>
-      <input type="text" id="nomeusuario" name="nomeusuario" required>
+      <input type="text" id="nomeusuario" name="nomeusuario" required value="{{ dados.nomeusuario|default_if_none:'' }}">
 
       <label for="senha">Senha</label>
-      <input type="password" id="senha" name="senha" required>
+      <input type="password" id="senha" name="senha" required value="{{ dados.senha|default_if_none:'' }}">
 
       <label for="emailusuario">Email</label>
-      <input type="email" id="emailusuario" name="emailusuario" required>
+      <input type="email" id="emailusuario" name="emailusuario" required value="{{ dados.emailusuario|default_if_none:'' }}">
 
       <label for="datanascimento">Data de Nascimento</label>
-      <input type="date" id="datanascimento" name="datanascimento">
+      <input type="date" id="datanascimento" name="datanascimento" value="{{ dados.datanascimento|date:'Y-m-d' }}">
 
       <label for="genero">Gênero</label>
       <select id="genero" name="genero">
         <option value="">Selecione</option>
-        <option value="1">Masculino</option>
-        <option value="0">Feminino</option>
-        {% comment %} <option value="O">Outro</option> {% endcomment %}
+        <option value="1" {% if dados.genero == '1' %}selected{% endif %}>Masculino</option>
+        <option value="0" {% if dados.genero == '0' %}selected{% endif %}>Feminino</option>
       </select>
 
       <label for="fotoperfil">Link da Foto de Perfil</label>
-      <input type="url" id="fotoperfil" name="fotoperfil" placeholder="https://exemplo.com/imagem.jpg" required>
+      <input type="url" id="fotoperfil" name="fotoperfil" placeholder="https://exemplo.com/imagem.jpg" required value="{{ dados.fotoperfil|default_if_none:'' }}">
 
       <label for="biografia">Biografia</label>
-      <textarea id="biografia" name="biografia" rows="3"></textarea>
+      <textarea id="biografia" name="biografia" rows="3">{{ dados.biografia|default_if_none:'' }}</textarea>
 
       <label for="apelido">Apelido</label>
-      <input type="text" id="apelido" name="apelido" required>
+      <input type="text" id="apelido" name="apelido" required value="{{ dados.apelido|default_if_none:'' }}">
 
-      <label for="estado">Estado</label>
-      <select id="estado" name="estado" required>
+      <label for="estadoid">Estado</label>
+      <select id="estadoid" name="estadoid" required>
         <option value="">Selecione um estado</option>
         {% for estado in estados %}
-          <option value="{{ estado.estadoid }}">{{ estado.nomeestado }}</option>
+          <option value="{{ estado.estadoid }}" {% if estado.estadoid == estado_selecionado %}selected{% endif %}>
+            {{ estado.nomeestado }}
+          </option>
         {% endfor %}
       </select>
 
       <label for="cidadeid">Cidade</label>
       <select id="cidadeid" name="cidadeid" required>
         <option value="">Selecione uma cidade</option>
+        {% for cidade in cidades %}
+          <option value="{{ cidade.cidadeid }}" {% if cidade.cidadeid == cidade_selecionada %}selected{% endif %}>
+            {{ cidade.nomecidade }}
+          </option>
+        {% endfor %}
       </select>
 
       <button type="submit">Enviar</button>
@@ -67,10 +69,11 @@
   </div>
 
   <script>
-    document.getElementById('estado').addEventListener('change', function () {
+    document.getElementById('estadoid').addEventListener('change', function () {
       const estadoId = this.value;
       const cidadeSelect = document.getElementById('cidadeid');
       cidadeSelect.innerHTML = '<option value="">Carregando...</option>';
+
       if (estadoId) {
         fetch(`/cidades-por-estado/${estadoId}/`)
           .then(response => response.json())
@@ -86,11 +89,34 @@
           .catch(() => {
             cidadeSelect.innerHTML = '<option value="">Erro ao carregar</option>';
           });
-    } else {
-      cidadeSelect.innerHTML = '<option value="">Selecione um estado primeiro</option>';
-    }
+      } else {
+        cidadeSelect.innerHTML = '<option value="">Selecione um estado primeiro</option>';
+      }
+    });
+
+    // Carrega as cidades do estado já selecionado no carregamento da página (para edição)
+    document.addEventListener('DOMContentLoaded', function () {
+      const estadoId = document.getElementById('estadoid').value;
+      const cidadeSelecionada = "{{ cidade_selecionada }}";
+      const cidadeSelect = document.getElementById('cidadeid');
+
+      if (estadoId && cidadeSelecionada) {
+        fetch(`/cidades-por-estado/${estadoId}/`)
+          .then(response => response.json())
+          .then(data => {
+            cidadeSelect.innerHTML = '<option value="">Selecione uma cidade</option>';
+            data.forEach(cidade => {
+              const option = document.createElement('option');
+              option.value = cidade.id;
+              option.textContent = cidade.nome;
+              if (cidade.id == cidadeSelecionada) {
+                option.selected = true;
+              }
+              cidadeSelect.appendChild(option);
+            });
+          });
+      }
     });
   </script>
-
 </body>
 </html>
