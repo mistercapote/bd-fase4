@@ -15,7 +15,7 @@
     {% if dados %}
       {% url 'editar' 'usravaliaaut' dados.usuarioid dados.autorid %}
     {% else %}
-      {% url 'inserir' 'usravaliaaut' %} %}
+      {% url 'inserir' 'usravaliaaut' %}
     {% endif %}" 
     enctype="multipart/form-data" method="POST"> {% csrf_token %}
 
