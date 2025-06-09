@@ -10,7 +10,7 @@
 </head>
 <body>
   <div class="form-container">
-    <h1>Inserir Autor</h1>
+    <h1>{% if dados %}Editar{% else %}Inserir{% endif %} Autor</h1>
     <form action="{% if dados %}{% url 'editar' 'autor' dados.autorid %}{% else %}{% url 'inserir' 'autor' %}{% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
       
 
