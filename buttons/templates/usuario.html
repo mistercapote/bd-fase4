@@ -58,11 +58,6 @@
       <label for="cidadeid">Cidade</label>
       <select id="cidadeid" name="cidadeid" required>
         <option value="">Selecione uma cidade</option>
-        {% for cidade in cidades %}
-          <option value="{{ cidade.cidadeid }}" {% if cidade.cidadeid == cidade_selecionada %}selected{% endif %}>
-            {{ cidade.nomecidade }}
-          </option>
-        {% endfor %}
       </select>
 
       <button type="submit">Enviar</button>
@@ -98,7 +93,7 @@
     // Carrega as cidades do estado já selecionado no carregamento da página (para edição)
     document.addEventListener('DOMContentLoaded', function () {
       const estadoId = document.getElementById('estadoid').value;
-      const cidadeSelecionada = "{{ cidade_selecionada }}";
+      const cidadeSelecionada = "{{ dados.cidadeid }}";
       const cidadeSelect = document.getElementById('cidadeid');
 
       if (estadoId && cidadeSelecionada) {
