@@ -3,31 +3,28 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Inserir Editora</title>
+  <title>{% if dados %}Editar{% else %}Inserir{% endif %} Editora</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="{% static 'css/style.css' %}" rel="stylesheet">
 
 </head>
 <body>
   <div class="form-container">
-    <h1>Inserir Editora</h1>
-     <form action="{% if acao == 'inserir' %}
-                    {% url 'formulario' 'inserir' 'editora' %}
-                  {% elif acao == 'atualizar' %}
-                    {% url 'formulario' 'atualizar' 'editora' %}
-                  {% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
+    <h1>{% if dados %}Editar{% else %}Inserir{% endif %} Editora</h1>
+     <form action="{% if dados %}{% url 'editar' 'editora' dados.editoraid %}{% else %}{% url 'inserir' 'editora' %}{% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
+      
       
       <label for="editoraid">ID da Editora</label>
-      <input type="number" id="editoraid" name="editoraid" required min="1">
+      <input type="number" id="editoraid" name="editoraid" required min="1" value="{{ dados.editoraid|default_if_none:'' }}">
 
       <label for="nomeeditora">Nome da Editora</label>
-      <input type="text" id="nomeeditora" name="nomeeditora" required>
+      <input type="text" id="nomeeditora" name="nomeeditora" required value="{{ dados.nomeeditora|default_if_none:'' }}">
 
       <label for="siteoficial">Site oficial da Editora</label>
-      <input type="text" id="siteoficial" name="siteoficial">
+      <input type="text" id="siteoficial" name="siteoficial" value="{{ dados.siteoficial|default_if_none:'' }}">
 
-      <label for="descricaoeditora">Descrição da Editora</label>
-      <input type="text" id="descricaoeditora" name="descricaoeditora">
+      <label for="descricaoeditora">Descrição do Editora</label>
+      <textarea id="descricaoeditora" name="descricaoeditora" rows="4" required>{{ dados.descricaoeditora|default_if_none:'' }}</textarea>
 
       <button type="submit">Enviar</button>
     </form>

@@ -3,25 +3,21 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Inserir Estado</title>
+  <title>{% if dados %}Editar{% else %}Inserir{% endif %} Estado</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="{% static 'css/style.css' %}" rel="stylesheet">
     
 </head>
 <body>
   <div class="form-container">
-    <h1>Inserir Estado</h1>
-     <form action="{% if acao == 'inserir' %}
-                    {% url 'formulario' 'inserir' 'estado' %}
-                  {% elif acao == 'atualizar' %}
-                    {% url 'formulario' 'atualizar' 'estado' %}
-                  {% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
+    <h1>{% if dados %}Editar{% else %}Inserir{% endif %} Estado</h1>
+     <form action="{% if dados %}{% url 'editar' 'estado' dados.estadoid %}{% else %}{% url 'inserir' 'estado' %}{% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
 
       <label for="estadoid">Sigla do Estado (UF)</label>
-      <input type="text" id="estadoid" name="estadoid" maxlength="2" pattern="[A-Z]{2}" title="Use apenas letras maiúsculas (ex: SP)" required>
+      <input type="text" id="estadoid" name="estadoid" maxlength="2" pattern="[A-Z]{2}" title="Use apenas letras maiúsculas (ex: SP)" required value="{{ dados.estadoid|default_if_none:'' }}">
 
       <label for="nomeestado">Nome do Estado</label>
-      <input type="text" id="nomeestado" name="nomeestado" maxlength="64" required>
+      <input type="text" id="nomeestado" name="nomeestado" maxlength="64" required value="{{ dados.nomeestado|default_if_none:'' }}">
 
       <button type="submit">Enviar</button>
     </form>

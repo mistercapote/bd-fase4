@@ -54,7 +54,8 @@ def listar(request, tabela):
             'colunas': colunas,
             'resultados': resultados,
             'tabela': tabela,
-            'tabelas_com_chave_composta': ['usrlelivro', 'usurseguusr', 'usrsegueaut', 'usravaliaaut']
+            'tabelas_com_chave_composta': ['livroaut', 'usrlelivro', 'usurseguusr', 'usrsegueaut', 'usravaliaaut'],
+            'tabelas_nao_editaveis': ['livroaut', 'usurseguusr', 'usrsegueaut']
         })
         
 def deletar(request, tabela, params):

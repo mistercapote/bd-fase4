@@ -3,27 +3,23 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Inserir Cidade</title>
+  <title>{% if dados %}Editar{% else %}Inserir{% endif %} Cidade</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="{% static 'css/style.css' %}" rel="stylesheet">
 </head>
 <body>
   <div class="form-container">
-    <h1>Inserir Cidade</h1>
-     <form action="{% if acao == 'inserir' %}
-                    {% url 'formulario' 'inserir' 'cidade' %}
-                  {% elif acao == 'atualizar' %}
-                    {% url 'formulario' 'atualizar' 'cidade' %}
-                  {% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
+    <h1>{% if dados %}Editar{% else %}Inserir{% endif %} Cidade</h1>
+     <form action="{% if dados %}{% url 'editar' 'cidade' dados.cidadeid %}{% else %}{% url 'inserir' 'cidade' %}{% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
 
       <label for="cidadeid">ID da Cidade</label>
-      <input type="number" id="cidadeid" name="cidadeid" required min="1">
+      <input type="number" id="cidadeid" name="cidadeid" required min="1" value="{{ dados.cidadeid|default_if_none:'' }}">
 
       <label for="nomecidade">Nome da Cidade</label>
-      <input type="text" id="nomecidade" name="nomecidade" maxlength="128" required>
+      <input type="text" id="nomecidade" name="nomecidade" maxlength="128" required value="{{ dados.nomecidade|default_if_none:'' }}">
 
       <label for="estadoid">ID do Estado (UF)</label>
-      <input type="text" id="estadoid" name="estadoid" maxlength="2" pattern="[A-Z]{2}" title="Use apenas a sigla do estado em letras maiúsculas (ex: SP)" required>
+      <input type="text" id="estadoid" name="estadoid" maxlength="2" pattern="[A-Z]{2}" title="Use apenas a sigla do estado em letras maiúsculas (ex: SP)" required value="{{ dados.estadoid|default_if_none:'' }}">
 
       <button type="submit">Enviar</button>
     </form>

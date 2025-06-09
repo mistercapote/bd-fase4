@@ -3,47 +3,43 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Inserir Edição</title>
+  <title>{% if dados %}Editar{% else %}Inserir{% endif %} Edição</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="{% static 'css/style.css' %}" rel="stylesheet">
 
 </head>
 <body>
   <div class="form-container">
-    <h1>Inserir Edição</h1>
-     <form action="{% if acao == 'inserir' %}
-                    {% url 'formulario' 'inserir' 'edicao' %}
-                  {% elif acao == 'atualizar' %}
-                    {% url 'formulario' 'atualizar' 'edicao' %}
-                  {% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
+    <h1>{% if dados %}Editar{% else %}Inserir{% endif %} Edição</h1>
+     <form action="{% if dados %}{% url 'editar' 'edicao' dados.edicaoid %}{% else %}{% url 'inserir' 'edicao' %}{% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
 
       <label for="edicaoid">ID da Edição</label>
-      <input type="number" id="edicaoid" name="edicaoid" required min="1">
+      <input type="number" id="edicaoid" name="edicaoid" required min="1" value="{{ dados.edicaoid|default_if_none:'' }}">
 
      <label for="anopublicacao">Ano de Publicação</label>
      <input type="number" id="anopublicacao" name="anopublicacao"
-       required min="1000" max="9999" oninput="limitLength(this, 4)">
+       required min="1000" max="9999" oninput="limitLength(this, 4)" value="{{ dados.anopublicacao|default_if_none:'' }}">
 
       <label for="isbn13">ISBN-13</label>
-      <input type="text" id="isbn13" name="isbn13" maxlength="13">
+      <input type="text" id="isbn13" name="isbn13" maxlength="13" value="{{ dados.isbn13|default_if_none:'' }}">
 
       <label for="isbn10">ISBN-10</label>
-      <input type="text" id="isbn10" name="isbn10" maxlength="10">
+      <input type="text" id="isbn10" name="isbn10" maxlength="10" value="{{ dados.isbn10|default_if_none:'' }}">
 
       <label for="idioma">Idioma</label>
-      <input type="text" id="idioma" name="idioma" maxlength="32" required>
+      <input type="text" id="idioma" name="idioma" maxlength="32" required value="{{ dados.idioma|default_if_none:'' }}">
 
       <label for="numpaginas">Número de Páginas</label>
-      <input type="number" id="numpaginas" name="numpaginas" required min="1">
+      <input type="number" id="numpaginas" name="numpaginas" required min="1" value="{{ dados.numpaginas|default_if_none:'' }}">
 
       <label for="descricaoedicao">Descrição da Edição</label>
-      <textarea id="descricaoedicao" name="descricaoedicao" rows="4" required></textarea>
+      <textarea id="descricaoedicao" name="descricaoedicao" rows="4" required>{{ dados.descricaoedicao|default_if_none:'' }}</textarea>
 
       <label for="livroid">ID do Livro</label>
-      <input type="number" id="livroid" name="livroid" required min="1">
+      <input type="number" id="livroid" name="livroid" required min="1" value="{{ dados.livroid|default_if_none:'' }}">
 
       <label for="editoraid">ID da Editora</label>
-      <input type="number" id="editoraid" name="editoraid" required min="1">
+      <input type="number" id="editoraid" name="editoraid" required min="1" value="{{ dados.editoraid|default_if_none:'' }}">
 
       <button type="submit">Enviar</button>
     </form>

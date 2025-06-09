@@ -11,20 +11,22 @@
 <body>
   <div class="form-container">
     <h1>Avaliar Autor</h1>
-     <form action="{% if acao == 'inserir' %}
-                    {% url 'formulario' 'inserir' 'usravaliaaut' %}
-                  {% elif acao == 'atualizar' %}
-                    {% url 'formulario' 'atualizar' 'usravaliaaut' %}
-                  {% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
+     <form action="
+    {% if dados %}
+      {% url 'editar' 'usravaliaaut' dados.autorid|add:'-'|add:dados.usuarioid %}
+    {% else %}
+      {% url 'inserir' 'usravaliaaut' %} %}
+    {% endif %}" 
+    enctype="multipart/form-data" method="POST"> {% csrf_token %}
 
       <label for="notaautor">Nota do Autor </label>
-      <input type="number" id="notaautor" name="notaautor" min="1" max="5" required>
+      <input type="number" id="notaautor" name="notaautor" min="1" max="5" required value="{{ dados.notaautor|default_if_none:'' }}">
 
       <label for="autorid">ID do Autor</label>
-      <input type="number" id="autorid" name="autorid" required min="1">
+      <input type="number" id="autorid" name="autorid" required min="1" value="{{ dados.autorid|default_if_none:'' }}">
 
       <label for="usuarioid">ID do Usuário</label>
-      <input type="number" id="usuarioid" name="usuarioid" required min="1">
+      <input type="number" id="usuarioid" name="usuarioid" required min="1" value="{{ dados.usuarioid|default_if_none:'' }}">
 
       <button type="submit">Enviar</button>
     </form>
