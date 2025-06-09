@@ -12,10 +12,10 @@
   <div class="form-container">
     <h1>{% if dados %}Editar{% else %}Inserir{% endif %} Estado</h1>
      <form action="{% if dados %}{% url 'editar' 'estado' dados.estadoid %}{% else %}{% url 'inserir' 'estado' %}{% endif %}" enctype="multipart/form-data" method="POST"> {% csrf_token %}
-
+      {% if not dados %}
       <label for="estadoid">Sigla do Estado (UF)</label>
       <input type="text" id="estadoid" name="estadoid" maxlength="2" pattern="[A-Z]{2}" title="Use apenas letras maiúsculas (ex: SP)" required value="{{ dados.estadoid|default_if_none:'' }}">
-
+      {% endif %}
       <label for="nomeestado">Nome do Estado</label>
       <input type="text" id="nomeestado" name="nomeestado" maxlength="64" required value="{{ dados.nomeestado|default_if_none:'' }}">
 

@@ -18,12 +18,14 @@
       {% url 'inserir' 'usrlelivro' %} %}
     {% endif %}" 
     enctype="multipart/form-data" method="POST"> {% csrf_token %}
-      
+      {% if not dados %}
       <label for="usuarioid">ID do Usuário</label>
       <input type="number" id="usuarioid" name="usuarioid" required min="1" value="{{ dados.usuarioid|default_if_none:'' }}">
 
       <label for="livroid">ID do Livro</label>
       <input type="number" id="livroid" name="livroid" required min="1" value="{{ dados.livroid|default_if_none:'' }}">
+      {% endif %}
+
       <label for="statusleitura">Status da Leitura</label>
       <select id="statusleitura" name="statusleitura" required>
         <option value="">Selecione...</option>
