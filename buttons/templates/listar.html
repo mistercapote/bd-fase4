@@ -17,6 +17,28 @@
       margin-bottom: 30px;
     }
 
+    .search-container {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .search-input {
+      padding: 10px 15px;
+      width: 60%;
+      border: 1px solid #ddd;
+      border-radius: 25px;
+      font-size: 16px;
+      outline: none;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+      border-color: #4CAF50;
+      box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -59,12 +81,25 @@
     .delete-icon {
       color: #f44336;
     }
+
+    .no-results {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+      display: none;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Listagem da Tabela {{ tabela|title }}</h1>
-    <table>
+    
+    <!-- Barra de pesquisa adicionada aqui -->
+    <div class="search-container">
+      <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar em {{ tabela|title }}..." onkeyup="searchTable()">
+    </div>
+
+    <table id="dataTable">
       <thead>
         <tr>
           {% for coluna in colunas %}
@@ -130,7 +165,44 @@
         {% endfor %}
       </tbody>
     </table>
+    <div id="noResults" class="no-results">Nenhum resultado encontrado.</div>
   </div>
+
+  <script>
+    function searchTable() {
+      // Obter o valor da pesquisa
+      const input = document.getElementById("searchInput");
+      const filter = input.value.toUpperCase();
+      const table = document.getElementById("dataTable");
+      const tr = table.getElementsByTagName("tr");
+      const noResults = document.getElementById("noResults");
+      let found = false;
+
+      // Loop através de todas as linhas da tabela, começando da segunda (ignorando o cabeçalho)
+      for (let i = 1; i < tr.length; i++) {
+        let display = "none";
+        // Obter todas as células da linha atual
+        const td = tr[i].getElementsByTagName("td");
+        
+        // Verificar cada célula (exceto as últimas que contêm os botões)
+        for (let j = 0; j < td.length - 2; j++) {
+          const cell = td[j];
+          if (cell) {
+            const txtValue = cell.textContent || cell.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              display = "";
+              found = true;
+              break; // Se encontrou em uma célula, não precisa verificar as outras
+            }
+          }
+        }
+        tr[i].style.display = display;
+      }
+
+      // Mostrar mensagem se nenhum resultado for encontrado
+      noResults.style.display = found ? "none" : "block";
+    }
+  </script>
 
 </body>
 </html>
