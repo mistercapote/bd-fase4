@@ -1,4 +1,4 @@
-from django.db import connection
+from django.db import connection, transaction
 from django.shortcuts import render, redirect
 from django.http import HttpResponseBadRequest, HttpResponse
 from django.http import JsonResponse
@@ -63,11 +63,45 @@ def deletar(request, tabela, params):
     if not chaves:
         return HttpResponseBadRequest("Tabela inválida.")
     if request.method == "POST":
-        query = f"DELETE FROM {tabela} WHERE " + " AND ".join([f"{chave} = %s" for chave in chaves])
         try:
-            with connection.cursor() as cursor:
-                cursor.execute(query, params)
-            return redirect(f'/listar/{tabela}')
+            with transaction.atomic():  # Garante que tudo ocorra numa transação
+
+                # 1. Buscar tabelas que referenciam a atual
+                with connection.cursor() as cursor:
+                    cursor.execute("""
+                        SELECT
+                            kcu.table_name,
+                            kcu.column_name
+                        FROM
+                            information_schema.table_constraints tc
+                        JOIN
+                            information_schema.key_column_usage kcu
+                            ON tc.constraint_name = kcu.constraint_name
+                            AND tc.constraint_schema = kcu.constraint_schema
+                        JOIN
+                            information_schema.referential_constraints rc
+                            ON tc.constraint_name = rc.constraint_name
+                        JOIN
+                            information_schema.constraint_column_usage ccu
+                            ON rc.unique_constraint_name = ccu.constraint_name
+                        WHERE
+                            tc.constraint_type = 'FOREIGN KEY'
+                            AND ccu.table_name = %s
+                    """, [tabela])
+                    dependencias = cursor.fetchall()  # [(tabela_dependente, coluna_que_aponta), ...]
+
+                # 2. Deletar dependências
+                for tabela_dep, coluna_fk in dependencias:
+                    delete_query = f"DELETE FROM {tabela_dep} WHERE {coluna_fk} = %s"
+                    # Por simplicidade, assume-se uma única chave primária aqui.
+                    with connection.cursor() as cursor:
+                        cursor.execute(delete_query, [params[0]])
+
+                # 3. Deletar da tabela principal
+                delete_principal = f"DELETE FROM {tabela} WHERE " + " AND ".join([f"{chave} = %s" for chave in chaves])
+                with connection.cursor() as cursor:
+                    cursor.execute(delete_principal, params)
+                return redirect(f"/listar/{tabela}")
         except Exception as e:
             return HttpResponseBadRequest(f"Erro ao deletar: {str(e)}")
 
