@@ -194,6 +194,13 @@ def inserir(request, tabela):
             biografia = request.POST.get('biografia')
             apelido = request.POST.get('apelido')
             cidadeid = request.POST.get('cidadeid')
+            
+             # Verificar se o usuário já existe
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT 1 FROM usuario WHERE usuarioid = %s", [usuarioid])
+                if cursor.fetchone():
+                    return HttpResponseBadRequest(f"Erro: O usuário com ID {usuarioid} já existe.")
+            
             query = ("INSERT INTO usuario (usuarioid, nomeusuario, senha, emailusuario, datanascimento, genero, fotoperfil, biografia, apelido, cidadeid) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);")
             params = [usuarioid, nomeusuario, senha, emailusuario, datanascimento, genero, fotoperfil, biografia, apelido, cidadeid]
             mensagem_sucesso = f"Usuário {nomeusuario} inserido com sucesso!"
