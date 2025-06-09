@@ -257,7 +257,13 @@ def inserir(request, tabela):
                 cursor.execute("SELECT 1 FROM usuario WHERE usuarioid = %s", [usuarioid])
                 if cursor.fetchone():
                     return HttpResponseBadRequest(f"Erro: O usuário com ID {usuarioid} já existe.")
-            
+                
+                # Verificar se o email já está cadastrado
+                cursor.execute("SELECT 1 FROM usuario WHERE emailusuario = %s", [emailusuario])
+                if cursor.fetchone():
+                    return HttpResponseBadRequest(f"Erro: O email {emailusuario} já está cadastrado para outro usuário.")
+                
+                
             query = ("INSERT INTO usuario (usuarioid, nomeusuario, senha, emailusuario, datanascimento, genero, fotoperfil, biografia, apelido, cidadeid) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);")
             params = [usuarioid, nomeusuario, senha, emailusuario, datanascimento, genero, fotoperfil, biografia, apelido, cidadeid]
             mensagem_sucesso = f"Usuário {nomeusuario} inserido com sucesso!"
