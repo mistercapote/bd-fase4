@@ -12,9 +12,12 @@ Para instalar as bibliotecas necessárias, execute:
 
 Para criar o html, execute:
 ```bash
-  python3 manage.py runserver (seu id aqui):8000 
+  python3 manage.py runserver (seu ip aqui):8000 
 ```
-
+Exemplo:
+```bash
+  python3 manage.py runserver 10.61.49.165:8000 
+```
 
 ## Contribuições
 
