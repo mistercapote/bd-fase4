@@ -58,8 +58,8 @@ def listar(request, tabela):
             'tabelas_nao_editaveis': ['livroaut', 'usurseguusr', 'usrsegueaut']
         })
         
-def deletar(request, tabela, params):
-    params = list(map(int, params.split("-")))
+def deletar(request, tabela, *params):
+    # params = list(map(int, params.split("-")))
     chaves = PRIMARY_KEYS.get(tabela)
     if not chaves:
         return HttpResponseBadRequest("Tabela inválida.")
