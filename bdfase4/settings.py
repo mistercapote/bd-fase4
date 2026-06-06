@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'buttons'
 ]
+CSRF_TRUSTED_ORIGINS = [
+    "https://localhost:8000",
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -92,11 +95,11 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'vscode',
         'USER': 'vscode',
-        'PASSWORD': '',  # veja abaixo
+        'PASSWORD': 'vscode',  # veja abaixo
         'HOST': 'localhost',
         'PORT': '5432',
         'OPTIONS': {
-            'options': '-c search_path=zagi,public'
+            'options': '-c search_path=skoob,public'
         }
     }
 }
