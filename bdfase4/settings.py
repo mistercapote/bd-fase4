@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'buttons'
 ]
+# tem que colocar para poder hostear o site
 CSRF_TRUSTED_ORIGINS = [
     "https://localhost:8000",
 ]
@@ -80,7 +81,7 @@ WSGI_APPLICATION = 'bdfase4.wsgi.application'
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'elisa',
+#         'NAME': 'elisa', # nome da base de dados
 #         'USER': 'cd_2024',
 #         'PASSWORD': '2024',
 #         'HOST': '10.61.49.132',
