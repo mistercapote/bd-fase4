@@ -8,8 +8,14 @@ Para instalar as bibliotecas necessárias, execute:
   pip install -r requirements.txt
 ```
 
-## Criar banco de dados no PostgreSQL
+## Banco de dados
 
+Entre no PostgreSQL:
+```
+winpty psql -U postgres
+```
+
+Crie o database:
 ```
 DROP DATABASE IF EXISTS skoob;
 CREATE DATABASE skoob WITH ENCODING 'UTF8';
@@ -17,7 +23,6 @@ CREATE DATABASE skoob WITH ENCODING 'UTF8';
 \i DDL_create_tables_skoob.sql
 \i DML_insert_skoob.SQL
 ```
-
 
 ## Configuração
 
