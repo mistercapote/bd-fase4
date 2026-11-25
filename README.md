@@ -8,15 +8,40 @@ Para instalar as bibliotecas necessárias, execute:
   pip install -r requirements.txt
 ```
 
+## Criar banco de dados no PostgreSQL
+
+```
+DROP DATABASE IF EXISTS skoob;
+CREATE DATABASE skoob WITH ENCODING 'UTF8';
+\c skoob
+\i DDL_create_tables_skoob.sql
+\i DML_insert_skoob.SQL
+```
+
+
+## Configuração
+
+No arquivo bdfase4/settings.py, altere os dados:
+```
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'skoob',
+        'USER': 'SUA_USUARIO_DO_POSTGRES',
+        'PASSWORD': 'SUA_SENHA_DO_POSTGRES',
+        'HOST': 'localhost',
+        'PORT': '5432',
+        'OPTIONS': {
+            'options': '-c search_path=skoob,public'
+        }
+    }
+}
+````
 ## Rodar o servidor
 
 Para criar o html, execute:
 ```bash
-  python3 manage.py runserver (seu ip aqui):8000 
-```
-Exemplo:
-```bash
-  python3 manage.py runserver 10.61.49.165:8000 
+  python manage.py runserver
 ```
 
 ## Contribuições
