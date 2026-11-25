@@ -91,12 +91,25 @@ WSGI_APPLICATION = 'bdfase4.wsgi.application'
 #         }
 #     }
 # }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'vscode',
+#         'USER': 'vscode',
+#         'PASSWORD': 'vscode',  # veja abaixo
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#         'OPTIONS': {
+#             'options': '-c search_path=skoob,public'
+#         }
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'vscode',
-        'USER': 'vscode',
-        'PASSWORD': 'vscode',  # veja abaixo
+        'NAME': 'skoob',
+        'USER': 'postgres',
+        'PASSWORD': '12345',
         'HOST': 'localhost',
         'PORT': '5432',
         'OPTIONS': {
@@ -104,7 +117,6 @@ DATABASES = {
         }
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
